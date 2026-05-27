@@ -12,9 +12,14 @@ public class ModBlockEntities {
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<HookahBlockEntity>> HOOKAH_BE =
             BLOCK_ENTITIES.register("hookah_be", () ->
-                    BlockEntityType.Builder.of(HookahBlockEntity::new, SteamSmoke.HOOKAH.get()).build(null)); //[cite: 4, 5]
+                    BlockEntityType.Builder.of(HookahBlockEntity::new, SteamSmoke.HOOKAH.get()).build(null));
+
+    // ИСПРАВЛЕНО: Добавлен тип BlockEntity для ступки
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MortarBlockEntity>> MORTAR_BE =
+            BLOCK_ENTITIES.register("mortar_be", () ->
+                    BlockEntityType.Builder.of(MortarBlockEntity::new, SteamSmoke.MORTAR.get()).build(null));
 
     public static void register(IEventBus eventBus) {
-        BLOCK_ENTITIES.register(eventBus); //[cite: 4]
+        BLOCK_ENTITIES.register(eventBus);
     }
 }

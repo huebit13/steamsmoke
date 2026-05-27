@@ -7,6 +7,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -19,13 +20,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class MortarBlock extends Block implements EntityBlock {
 
-    // Форма ступки — приземистый цилиндр (аппроксимация боксом)
     private static final VoxelShape SHAPE = Block.box(3, 0, 3, 13, 7, 13);
 
     public MortarBlock(Properties properties) {
@@ -33,33 +34,31 @@ public class MortarBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return SHAPE;
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         return new MortarBlockEntity(pos, state);
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level,
-                                              BlockPos pos, Player player, InteractionHand hand,
-                                              BlockHitResult hitResult) {
+    protected @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack stack, @NotNull BlockState state, @NotNull Level level,
+                                                       @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand,
+                                                       @NotNull BlockHitResult hitResult) {
 
         if (!(level.getBlockEntity(pos) instanceof MortarBlockEntity mortar)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
-        // ── Пустая рука → забрать содержимое ──────────────────────────────
         if (stack.isEmpty()) {
             if (!mortar.isEmpty()) {
                 if (!level.isClientSide) {
                     List<ItemStack> contents = mortar.removeAll();
                     for (ItemStack item : contents) {
                         if (!player.addItem(item)) {
-                            // Если инвентарь полон — дроп на землю
                             ItemEntity entity = new ItemEntity(level,
                                     pos.getX() + 0.5, pos.getY() + 0.8, pos.getZ() + 0.5, item);
                             level.addFreshEntity(entity);
@@ -72,24 +71,19 @@ public class MortarBlock extends Block implements EntityBlock {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
-        // ── Пестик → обработка содержимого ────────────────────────────────
         if (stack.is(ModItems.PESTLE.get())) {
             return handlePestle(mortar, stack, level, pos, player, hand);
         }
 
-        // ── Любой другой предмет → положить в ступку ──────────────────────
-        return handleAddItem(mortar, stack, level, pos, player, hand);
+        return handleAddItem(mortar, stack, level, pos, player);
     }
-
-    // ─────────────────────────────────────────────────────────────────────────
 
     private ItemInteractionResult handlePestle(MortarBlockEntity mortar, ItemStack pestle,
                                                Level level, BlockPos pos,
                                                Player player, InteractionHand hand) {
         if (mortar.isEmpty()) {
             if (!level.isClientSide) {
-                player.displayClientMessage(
-                        Component.translatable("block.steamsmoke.mortar.empty"), true);
+                player.displayClientMessage(Component.translatable("block.steamsmoke.mortar.empty"), true);
             }
             return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
@@ -98,48 +92,42 @@ public class MortarBlock extends Block implements EntityBlock {
         int count = contents.size();
 
         if (!level.isClientSide) {
-            // Один предмет → измельчить
             if (count == 1) {
-                ItemStack single = contents.get(0);
+                ItemStack single = contents.getFirst();
                 ItemStack ground = GrindingRecipes.getResult(single);
 
                 if (ground.isEmpty()) {
-                    player.displayClientMessage(
-                            Component.translatable("block.steamsmoke.mortar.cannot_grind"), true);
-                    return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                    player.displayClientMessage(Component.translatable("block.steamsmoke.mortar.cannot_grind"), true);
+                    return ItemInteractionResult.sidedSuccess(false);
                 }
 
                 mortar.replaceWith(ground);
                 damagePestle(pestle, player, hand);
                 level.playSound(null, pos, SoundEvents.GRINDSTONE_USE, SoundSource.BLOCKS, 1.0f, 1.2f);
                 spawnGrindParticles(level, pos);
-                player.displayClientMessage(
-                        Component.translatable("block.steamsmoke.mortar.ground"), true);
+                player.displayClientMessage(Component.translatable("block.steamsmoke.mortar.ground"), true);
 
-                // Несколько измельчённых → смешать в замес
-            } else if (count >= 2) {
-                // Проверяем что все предметы — измельчённые
+            } else {
                 boolean allGround = contents.stream().allMatch(GrindingRecipes::isGround);
 
                 if (!allGround) {
-                    player.displayClientMessage(
-                            Component.translatable("block.steamsmoke.mortar.not_all_ground"), true);
-                    return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                    player.displayClientMessage(Component.translatable("block.steamsmoke.mortar.not_all_ground"), true);
+                    return ItemInteractionResult.sidedSuccess(false);
                 }
 
-                // Обязательно должен быть измельчённый табак
-                boolean hasTobacco = contents.stream()
-                        .anyMatch(s -> s.is(ModItems.GROUND_TOBACCO.get()));
+                boolean hasTobacco = contents.stream().anyMatch(s -> s.is(ModItems.GROUND_TOBACCO.get()));
 
                 if (!hasTobacco) {
-                    player.displayClientMessage(
-                            Component.translatable("block.steamsmoke.mortar.no_tobacco"), true);
-                    return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                    player.displayClientMessage(Component.translatable("block.steamsmoke.mortar.no_tobacco"), true);
+                    return ItemInteractionResult.sidedSuccess(false);
                 }
 
-                // Собираем список ингредиентов в замес
+                // ИСПРАВЛЕНО: Безопасное получение пути (Path) идентификатора предмета из Holder через unwrapKey()
                 List<String> ingredients = contents.stream()
-                        .map(s -> s.getItem().builtInRegistryHolder().key().location().getPath())
+                        .map(s -> s.getItemHolder().unwrapKey()
+                                .map(key -> key.location().getPath())
+                                .orElse(""))
+                        .filter(path -> !path.isEmpty())
                         .toList();
 
                 ItemStack mixture = MixtureItem.createMixture(ingredients);
@@ -149,8 +137,7 @@ public class MortarBlock extends Block implements EntityBlock {
                 damagePestle(pestle, player, hand);
                 level.playSound(null, pos, SoundEvents.GRINDSTONE_USE, SoundSource.BLOCKS, 1.0f, 0.8f);
                 spawnMixParticles(level, pos);
-                player.displayClientMessage(
-                        Component.translatable("block.steamsmoke.mortar.mixed"), true);
+                player.displayClientMessage(Component.translatable("block.steamsmoke.mortar.mixed"), true);
             }
         }
 
@@ -158,12 +145,10 @@ public class MortarBlock extends Block implements EntityBlock {
     }
 
     private ItemInteractionResult handleAddItem(MortarBlockEntity mortar, ItemStack stack,
-                                                Level level, BlockPos pos,
-                                                Player player, InteractionHand hand) {
+                                                Level level, BlockPos pos, Player player) {
         if (mortar.isFull()) {
             if (!level.isClientSide) {
-                player.displayClientMessage(
-                        Component.translatable("block.steamsmoke.mortar.full"), true);
+                player.displayClientMessage(Component.translatable("block.steamsmoke.mortar.full"), true);
             }
             return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
@@ -179,10 +164,10 @@ public class MortarBlock extends Block implements EntityBlock {
         return ItemInteractionResult.sidedSuccess(level.isClientSide);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-
     private void damagePestle(ItemStack pestle, Player player, InteractionHand hand) {
-        pestle.hurtAndBreak(1, player, hand);
+        // ИСПРАВЛЕНО: Конвертируем InteractionHand в EquipmentSlot, так как старый метод удален
+        EquipmentSlot slot = (hand == InteractionHand.MAIN_HAND) ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
+        pestle.hurtAndBreak(1, player, slot);
     }
 
     private void spawnGrindParticles(Level level, BlockPos pos) {

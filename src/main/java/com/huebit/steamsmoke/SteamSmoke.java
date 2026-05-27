@@ -29,16 +29,26 @@ public class SteamSmoke {
                     .noOcclusion()
             )
     );
-
     public static final DeferredItem<BlockItem> HOOKAH_ITEM = ITEMS.registerSimpleBlockItem("hookah", HOOKAH);
+
+    // РЕГИСТРАЦИЯ СТУПКИ (Убирает предупреждение "Class MortarBlock is never used")
+    public static final DeferredBlock<Block> MORTAR = BLOCKS.register("mortar",
+            () -> new MortarBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.STONE)
+                    .strength(2.0f)
+                    .noOcclusion()
+            )
+    );
+    public static final DeferredItem<BlockItem> MORTAR_ITEM = ITEMS.registerSimpleBlockItem("mortar", MORTAR);
 
     public SteamSmoke(IEventBus modEventBus) {
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
         ModBlockEntities.register(modEventBus);
+        ModItems.register(modEventBus); // Вызываем, чтобы убрать "Method register is never used"
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
-            modEventBus.register(SteamSmokeClient.class);
+            modEventBus.register(new SteamSmokeClient());
         }
     }
 }
