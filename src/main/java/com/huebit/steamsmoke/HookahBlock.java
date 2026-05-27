@@ -4,26 +4,18 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.MilkBucketItem;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.Nullable;
 
 public class HookahBlock extends Block implements EntityBlock {
@@ -57,52 +49,27 @@ public class HookahBlock extends Block implements EntityBlock {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
-        // --- Молоко ---
-        if (stack.getItem() instanceof MilkBucketItem) {
-            if (!level.isClientSide) {
-                IFluidHandlerItem milkHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
-                if (milkHandler != null) {
-                    FluidStack milkFluid = milkHandler.drain(1000, IFluidHandlerItem.FluidAction.SIMULATE);
-                    if (!milkFluid.isEmpty()) {
-                        milkHandler.drain(1000, IFluidHandlerItem.FluidAction.EXECUTE);
-                        hookah.fluidTank.setFluid(new FluidStack(milkFluid.getFluid(), 1000));
-                        hookah.syncToClients(); // явная синхронизация
-                        if (!player.isCreative()) {
-                            player.setItemInHand(hand, new ItemStack(Items.BUCKET));
-                        }
-                    }
-                }
-            }
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+        // --- Вёдра с жидкостью → залить в кальян ---
+        if (stack.is(Items.WATER_BUCKET)) {
+            return fillHookah(hookah, level, player, hand, HookahFluidType.WATER, Items.BUCKET.getDefaultInstance());
         }
 
-        // --- Обычные жидкости (вода, лава, и др.) ---
-        if (stack.getItem() instanceof BucketItem bucketItem) {
-            Fluid fluid = bucketItem.content;
+        if (stack.is(Items.LAVA_BUCKET)) {
+            return fillHookah(hookah, level, player, hand, HookahFluidType.LAVA, Items.BUCKET.getDefaultInstance());
+        }
 
-            // Полное ведро — заливаем (заменяем старую жидкость)
-            if (fluid != Fluids.EMPTY) {
-                if (!level.isClientSide) {
-                    hookah.fluidTank.setFluid(new FluidStack(fluid, 1000));
-                    hookah.syncToClients(); // явная синхронизация
-                    if (!player.isCreative()) {
-                        player.setItemInHand(hand, new ItemStack(Items.BUCKET));
-                    }
-                }
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
-            }
+        if (stack.is(Items.MILK_BUCKET)) {
+            return fillHookah(hookah, level, player, hand, HookahFluidType.MILK, Items.BUCKET.getDefaultInstance());
+        }
 
-            // Пустое ведро — забираем жидкость из кальяна
-            if (!hookah.fluidTank.isEmpty()) {
+        // --- Пустое ведро → забрать жидкость из кальяна ---
+        if (stack.is(Items.BUCKET)) {
+            if (!hookah.getFluidType().isEmpty()) {
                 if (!level.isClientSide) {
-                    FluidStack fluidInHookah = hookah.fluidTank.getFluid().copy();
-                    hookah.fluidTank.setFluid(FluidStack.EMPTY);
-                    hookah.syncToClients(); // явная синхронизация
+                    ItemStack filledBucket = getFilledBucket(hookah.getFluidType());
+                    hookah.setFluidType(HookahFluidType.EMPTY);
                     if (!player.isCreative()) {
-                        ItemStack filledBucket = FluidUtil.getFilledBucket(fluidInHookah);
-                        if (!filledBucket.isEmpty()) {
-                            player.setItemInHand(hand, filledBucket);
-                        }
+                        player.setItemInHand(hand, filledBucket);
                     }
                 }
                 return ItemInteractionResult.sidedSuccess(level.isClientSide);
@@ -110,5 +77,37 @@ public class HookahBlock extends Block implements EntityBlock {
         }
 
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
+
+    // -------------------------------------------------------------------------
+    // Вспомогательные методы
+    // -------------------------------------------------------------------------
+
+    /**
+     * Заливает жидкость в кальян (заменяет старую).
+     * @param returnStack предмет, который игрок получит обратно (обычно пустое ведро)
+     */
+    private ItemInteractionResult fillHookah(HookahBlockEntity hookah, Level level,
+                                             Player player, InteractionHand hand,
+                                             HookahFluidType type, ItemStack returnStack) {
+        if (!level.isClientSide) {
+            hookah.setFluidType(type);
+            if (!player.isCreative()) {
+                player.setItemInHand(hand, returnStack);
+            }
+        }
+        return ItemInteractionResult.sidedSuccess(level.isClientSide);
+    }
+
+    /**
+     * Возвращает заполненное ведро для соответствующего типа жидкости.
+     */
+    private ItemStack getFilledBucket(HookahFluidType type) {
+        return switch (type) {
+            case WATER -> Items.WATER_BUCKET.getDefaultInstance();
+            case LAVA  -> Items.LAVA_BUCKET.getDefaultInstance();
+            case MILK  -> Items.MILK_BUCKET.getDefaultInstance();
+            default    -> Items.BUCKET.getDefaultInstance();
+        };
     }
 }

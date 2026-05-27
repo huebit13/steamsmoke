@@ -1,13 +1,3 @@
 {
-  "itemGroup.steamsmoke": "Example Mod Tab",
-  "block.steamsmoke.example_block": "Example Block",
-  "item.steamsmoke.example_item": "Example Item",
-
-  "steamsmoke.configuration.title": "Steam & Smoke Configs",
-  "steamsmoke.configuration.section.steamsmoke.common.toml": "Steam & Smoke Configs",
-  "steamsmoke.configuration.section.steamsmoke.common.toml.title": "Steam & Smoke Configs",
-  "steamsmoke.configuration.items": "Item List",
-  "steamsmoke.configuration.logDirtBlock": "Log Dirt Block",
-  "steamsmoke.configuration.magicNumberIntroduction": "Magic Number Text",
-  "steamsmoke.configuration.magicNumber": "Magic Number"
+  "block.steamsmoke.hookah": "Hookah"
 }
