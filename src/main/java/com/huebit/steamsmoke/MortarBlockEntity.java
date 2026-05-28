@@ -127,4 +127,17 @@ public class MortarBlockEntity extends BlockEntity {
         ContainerHelper.saveAllItems(tag, items, registries);
         return tag;
     }
+    @Override
+    public void onDataPacket(net.minecraft.network.Connection net,
+                             ClientboundBlockEntityDataPacket pkt,
+                             net.minecraft.core.HolderLookup.Provider lookupProvider) {
+        CompoundTag tag = pkt.getTag();
+        if (tag != null) {
+            loadAdditional(tag, lookupProvider);
+            // Говорим клиенту перерисовать чанк
+            if (level != null) {
+                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 8);
+            }
+        }
+    }
 }
