@@ -1,3 +1,7 @@
 {
-  "block.steamsmoke.hookah": "Hookah"
+  "block.steamsmoke.hookah": "Hookah",
+  "block.steamsmoke.hookah.no_mixture": "No mixture loaded",
+  "block.steamsmoke.hookah.no_fluid": "Fill the hookah with water, milk or lava first",
+  "block.steamsmoke.hookah.already_loaded": "Mixture already loaded",
+  "block.steamsmoke.hookah.mixture_spent": "The mixture burned out"
 }

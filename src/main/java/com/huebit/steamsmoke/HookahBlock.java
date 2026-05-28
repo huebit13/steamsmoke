@@ -1,8 +1,14 @@
 package com.huebit.steamsmoke;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -18,12 +24,17 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public class HookahBlock extends Block implements EntityBlock {
 
     private static final VoxelShape SHAPE = Shapes.or(
             Block.box(4, 0, 4, 12, 10, 12),
             Block.box(6, 10, 6, 10, 16, 10)
     );
+
+    // Сколько тиков нужно держать ПКМ для одного использования (~1.5 сек)
+    public static final int SMOKE_TICKS_REQUIRED = 30;
 
     public HookahBlock(Properties properties) {
         super(properties);
@@ -40,37 +51,44 @@ public class HookahBlock extends Block implements EntityBlock {
         return new HookahBlockEntity(pos, state);
     }
 
+    // ── ПКМ с предметом ───────────────────────────────────────────────────
+
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
                                               Player player, InteractionHand hand, BlockHitResult hitResult) {
 
-        BlockEntity be = level.getBlockEntity(pos);
-        if (!(be instanceof HookahBlockEntity hookah)) {
+        if (!(level.getBlockEntity(pos) instanceof HookahBlockEntity hookah)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
-        // --- Вёдра с жидкостью → залить в кальян ---
-        if (stack.is(Items.WATER_BUCKET)) {
-            return fillHookah(hookah, level, player, hand, HookahFluidType.WATER, Items.BUCKET.getDefaultInstance());
+        // --- Вёдра с жидкостью ---
+        if (stack.is(Items.WATER_BUCKET)) return fillHookah(hookah, level, player, hand, HookahFluidType.WATER, Items.BUCKET.getDefaultInstance());
+        if (stack.is(Items.LAVA_BUCKET))  return fillHookah(hookah, level, player, hand, HookahFluidType.LAVA,  Items.BUCKET.getDefaultInstance());
+        if (stack.is(Items.MILK_BUCKET))  return fillHookah(hookah, level, player, hand, HookahFluidType.MILK,  Items.BUCKET.getDefaultInstance());
+
+        // --- Пустое ведро → забрать жидкость ---
+        if (stack.is(Items.BUCKET) && !hookah.getFluidType().isEmpty()) {
+            if (!level.isClientSide) {
+                ItemStack filled = getFilledBucket(hookah.getFluidType());
+                hookah.setFluidType(HookahFluidType.EMPTY);
+                if (!player.isCreative()) player.setItemInHand(hand, filled);
+            }
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
 
-        if (stack.is(Items.LAVA_BUCKET)) {
-            return fillHookah(hookah, level, player, hand, HookahFluidType.LAVA, Items.BUCKET.getDefaultInstance());
-        }
-
-        if (stack.is(Items.MILK_BUCKET)) {
-            return fillHookah(hookah, level, player, hand, HookahFluidType.MILK, Items.BUCKET.getDefaultInstance());
-        }
-
-        // --- Пустое ведро → забрать жидкость из кальяна ---
-        if (stack.is(Items.BUCKET)) {
-            if (!hookah.getFluidType().isEmpty()) {
+        // --- Mixture → положить в кальян ---
+        if (stack.is(ModItems.MIXTURE.get())) {
+            if (!hookah.hasMixture()) {
                 if (!level.isClientSide) {
-                    ItemStack filledBucket = getFilledBucket(hookah.getFluidType());
-                    hookah.setFluidType(HookahFluidType.EMPTY);
-                    if (!player.isCreative()) {
-                        player.setItemInHand(hand, filledBucket);
-                    }
+                    hookah.setMixture(stack);
+                    if (!player.isCreative()) stack.shrink(1);
+                    level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.8f, 0.6f);
+                }
+                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            } else {
+                if (!level.isClientSide) {
+                    player.displayClientMessage(
+                            Component.translatable("block.steamsmoke.hookah.already_loaded"), true);
                 }
                 return ItemInteractionResult.sidedSuccess(level.isClientSide);
             }
@@ -79,29 +97,96 @@ public class HookahBlock extends Block implements EntityBlock {
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
-    // -------------------------------------------------------------------------
-    // Вспомогательные методы
-    // -------------------------------------------------------------------------
+    // ── ПКМ без предмета (или с шлангом) → курить ─────────────────────────
 
-    /**
-     * Заливает жидкость в кальян (заменяет старую).
-     * @param returnStack предмет, который игрок получит обратно (обычно пустое ведро)
-     */
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
+                                               Player player, BlockHitResult hitResult) {
+        if (!(level.getBlockEntity(pos) instanceof HookahBlockEntity hookah)) {
+            return InteractionResult.PASS;
+        }
+
+        if (!hookah.hasMixture()) {
+            if (!level.isClientSide) {
+                player.displayClientMessage(
+                        Component.translatable("block.steamsmoke.hookah.no_mixture"), true);
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
+
+        if (hookah.getFluidType().isEmpty()) {
+            if (!level.isClientSide) {
+                player.displayClientMessage(
+                        Component.translatable("block.steamsmoke.hookah.no_fluid"), true);
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
+
+        // Курим!
+        if (!level.isClientSide) {
+            smoke(hookah, level, pos, player);
+        } else {
+            spawnSmokeParticles(level, pos, hookah.getFluidType());
+        }
+
+        return InteractionResult.sidedSuccess(level.isClientSide);
+    }
+
+    // ── Логика курения ────────────────────────────────────────────────────
+
+    private void smoke(HookahBlockEntity hookah, Level level, BlockPos pos, Player player) {
+        List<String> ingredients = MixtureItem.getIngredients(hookah.getMixtureStack());
+        List<MobEffectInstance> effects = HookahSmokingRecipes.getEffects(ingredients, hookah.getFluidType());
+
+        // Применяем эффекты
+        for (MobEffectInstance effect : effects) {
+            player.addEffect(effect);
+        }
+
+        // Лава — поджигаем на 2 секунды
+        if (hookah.getFluidType() == HookahFluidType.LAVA) {
+            player.setRemainingFireTicks(40);
+        }
+
+        // Звук
+        level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.3f, 1.8f);
+
+        // Расходуем mixture
+        boolean alive = hookah.consumeUse();
+        if (!alive) {
+            player.displayClientMessage(
+                    Component.translatable("block.steamsmoke.hookah.mixture_spent"), true);
+        }
+    }
+
+    private void spawnSmokeParticles(Level level, BlockPos pos, HookahFluidType fluid) {
+        // Дым из верхушки кальяна
+        for (int i = 0; i < 6; i++) {
+            double x = pos.getX() + 0.4 + level.random.nextDouble() * 0.2;
+            double y = pos.getY() + 1.1;
+            double z = pos.getZ() + 0.4 + level.random.nextDouble() * 0.2;
+            double vy = 0.05 + level.random.nextDouble() * 0.03;
+
+            if (fluid == HookahFluidType.LAVA) {
+                level.addParticle(ParticleTypes.LAVA, x, y, z, 0, vy, 0);
+            } else {
+                level.addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 0, vy, 0);
+            }
+        }
+    }
+
+    // ── Вспомогательные ───────────────────────────────────────────────────
+
     private ItemInteractionResult fillHookah(HookahBlockEntity hookah, Level level,
                                              Player player, InteractionHand hand,
                                              HookahFluidType type, ItemStack returnStack) {
         if (!level.isClientSide) {
             hookah.setFluidType(type);
-            if (!player.isCreative()) {
-                player.setItemInHand(hand, returnStack);
-            }
+            if (!player.isCreative()) player.setItemInHand(hand, returnStack);
         }
         return ItemInteractionResult.sidedSuccess(level.isClientSide);
     }
 
-    /**
-     * Возвращает заполненное ведро для соответствующего типа жидкости.
-     */
     private ItemStack getFilledBucket(HookahFluidType type) {
         return switch (type) {
             case WATER -> Items.WATER_BUCKET.getDefaultInstance();
