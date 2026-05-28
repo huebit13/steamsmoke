@@ -24,8 +24,6 @@ public class MortarBlockEntity extends BlockEntity {
         super(ModBlockEntities.MORTAR_BE.get(), pos, state);
     }
 
-    // ── Доступ к слотам ───────────────────────────────────────────────────
-
     public int getItemCount() {
         int count = 0;
         for (ItemStack s : items) if (!s.isEmpty()) count++;
@@ -40,10 +38,6 @@ public class MortarBlockEntity extends BlockEntity {
         return getItemCount() == 0;
     }
 
-    /**
-     * Добавить предмет в первый свободный слот.
-     * Возвращает true если успешно.
-     */
     public boolean addItem(ItemStack stack) {
         if (isFull()) return false;
         for (int i = 0; i < MAX_SLOTS; i++) {
@@ -56,9 +50,6 @@ public class MortarBlockEntity extends BlockEntity {
         return false;
     }
 
-    /**
-     * Убрать все предметы и вернуть их списком.
-     */
     public List<ItemStack> removeAll() {
         List<ItemStack> result = new ArrayList<>();
         for (int i = 0; i < MAX_SLOTS; i++) {
@@ -71,9 +62,6 @@ public class MortarBlockEntity extends BlockEntity {
         return result;
     }
 
-    /**
-     * Заменить содержимое ступки одним предметом (результат измельчения).
-     */
     public void replaceWith(ItemStack stack) {
         for (int i = 0; i < MAX_SLOTS; i++) items.set(i, ItemStack.EMPTY);
         items.set(0, stack);
@@ -84,16 +72,11 @@ public class MortarBlockEntity extends BlockEntity {
         return items;
     }
 
-    /**
-     * Возвращает список непустых предметов.
-     */
     public List<ItemStack> getNonEmptyItems() {
         List<ItemStack> result = new ArrayList<>();
         for (ItemStack s : items) if (!s.isEmpty()) result.add(s);
         return result;
     }
-
-    // ── Синхронизация ─────────────────────────────────────────────────────
 
     public void sync() {
         setChanged();
@@ -101,8 +84,6 @@ public class MortarBlockEntity extends BlockEntity {
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
         }
     }
-
-    // ── NBT ───────────────────────────────────────────────────────────────
 
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider registries) {
@@ -113,6 +94,8 @@ public class MortarBlockEntity extends BlockEntity {
     @Override
     protected void loadAdditional(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
+        // Сначала очищаем все слоты, потом загружаем из тега
+        for (int i = 0; i < MAX_SLOTS; i++) items.set(i, ItemStack.EMPTY);
         ContainerHelper.loadAllItems(tag, items, registries);
     }
 
@@ -126,18 +109,5 @@ public class MortarBlockEntity extends BlockEntity {
         CompoundTag tag = new CompoundTag();
         ContainerHelper.saveAllItems(tag, items, registries);
         return tag;
-    }
-    @Override
-    public void onDataPacket(net.minecraft.network.Connection net,
-                             ClientboundBlockEntityDataPacket pkt,
-                             net.minecraft.core.HolderLookup.Provider lookupProvider) {
-        CompoundTag tag = pkt.getTag();
-        if (tag != null) {
-            loadAdditional(tag, lookupProvider);
-            // Говорим клиенту перерисовать чанк
-            if (level != null) {
-                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 8);
-            }
-        }
     }
 }

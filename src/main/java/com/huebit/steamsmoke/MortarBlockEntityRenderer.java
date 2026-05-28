@@ -16,22 +16,12 @@ public class MortarBlockEntityRenderer implements BlockEntityRenderer<MortarBloc
 
     private final ItemRenderer itemRenderer;
 
+    // Угол поворота вокруг вертикальной оси для каждого слота
+    private static final float[] Y_ROTATIONS = { 15f, -25f, 40f, -10f };
+
     public MortarBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
         this.itemRenderer = Minecraft.getInstance().getItemRenderer();
     }
-
-    // Позиции для 1, 2, 3, 4 предметов внутри ступки
-    // Каждый массив: {offsetX, offsetZ} от центра блока (0.5, 0.5)
-    private static final float[][][] SLOT_POSITIONS = {
-            // 1 предмет
-            {{ 0.0f, 0.0f }},
-            // 2 предмета
-            {{ -0.1f, 0.0f }, { 0.1f, 0.0f }},
-            // 3 предмета
-            {{ 0.0f, -0.1f }, { -0.1f, 0.08f }, { 0.1f, 0.08f }},
-            // 4 предмета
-            {{ -0.1f, -0.1f }, { 0.1f, -0.1f }, { -0.1f, 0.1f }, { 0.1f, 0.1f }}
-    };
 
     @Override
     public void render(MortarBlockEntity be, float partialTick, PoseStack poseStack,
@@ -41,25 +31,23 @@ public class MortarBlockEntityRenderer implements BlockEntityRenderer<MortarBloc
         if (items.isEmpty()) return;
 
         int count = Math.min(items.size(), 4);
-        float[][] positions = SLOT_POSITIONS[count - 1];
 
         for (int i = 0; i < count; i++) {
             ItemStack stack = items.get(i);
-            float ox = positions[i][0];
-            float oz = positions[i][1];
 
             poseStack.pushPose();
 
-            // Смещаем внутрь чаши ступки
-            // Y = 0.22f — высота внутри ступки (подобрано под модель)
-            poseStack.translate(0.5f + ox, 0.22f, 0.5f + oz);
+            // Стопка: каждый следующий предмет чуть выше предыдущего
+            float yOffset = 0.09f + i * 0.01f;
+            poseStack.translate(0.5f, yOffset, 0.5f);
 
             // Кладём предмет плашмя горизонтально
             poseStack.mulPose(new Quaternionf().rotationX((float) Math.toRadians(90f)));
 
-            // Маленький размер чтобы влезть в чашу
-            float scale = 0.22f;
-            poseStack.scale(scale, scale, scale);
+            // Поворачиваем каждый предмет на свой угол (после rotationX это даёт вращение вокруг вертикали)
+            poseStack.mulPose(new Quaternionf().rotationZ((float) Math.toRadians(Y_ROTATIONS[i])));
+
+            poseStack.scale(0.22f, 0.22f, 0.22f);
 
             itemRenderer.renderStatic(
                     stack,
@@ -69,7 +57,7 @@ public class MortarBlockEntityRenderer implements BlockEntityRenderer<MortarBloc
                     poseStack,
                     bufferSource,
                     be.getLevel(),
-                    (int) be.getBlockPos().asLong() + i // уникальный seed для каждого слота
+                    (int) be.getBlockPos().asLong() + i
             );
 
             poseStack.popPose();
