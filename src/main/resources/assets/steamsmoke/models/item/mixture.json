@@ -1,7 +1,24 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "steamsmoke:item/mixture_base",
-    "layer1": "steamsmoke:item/mixture_flecks"
-  }
+    "layer0": "steamsmoke:item/mixture_base"
+  },
+  "overrides": [
+    {"predicate": {"steamsmoke:flecks_variant": 1},  "model": "steamsmoke:item/mixture_1"},
+    {"predicate": {"steamsmoke:flecks_variant": 2},  "model": "steamsmoke:item/mixture_2"},
+    {"predicate": {"steamsmoke:flecks_variant": 3},  "model": "steamsmoke:item/mixture_3"},
+    {"predicate": {"steamsmoke:flecks_variant": 4},  "model": "steamsmoke:item/mixture_4"},
+    {"predicate": {"steamsmoke:flecks_variant": 5},  "model": "steamsmoke:item/mixture_5"},
+    {"predicate": {"steamsmoke:flecks_variant": 6},  "model": "steamsmoke:item/mixture_6"},
+    {"predicate": {"steamsmoke:flecks_variant": 7},  "model": "steamsmoke:item/mixture_7"},
+    {"predicate": {"steamsmoke:flecks_variant": 8},  "model": "steamsmoke:item/mixture_8"},
+    {"predicate": {"steamsmoke:flecks_variant": 9},  "model": "steamsmoke:item/mixture_9"},
+    {"predicate": {"steamsmoke:flecks_variant": 10}, "model": "steamsmoke:item/mixture_10"},
+    {"predicate": {"steamsmoke:flecks_variant": 11}, "model": "steamsmoke:item/mixture_11"},
+    {"predicate": {"steamsmoke:flecks_variant": 12}, "model": "steamsmoke:item/mixture_12"},
+    {"predicate": {"steamsmoke:flecks_variant": 13}, "model": "steamsmoke:item/mixture_13"},
+    {"predicate": {"steamsmoke:flecks_variant": 14}, "model": "steamsmoke:item/mixture_14"},
+    {"predicate": {"steamsmoke:flecks_variant": 15}, "model": "steamsmoke:item/mixture_15"},
+    {"predicate": {"steamsmoke:flecks_variant": 16}, "model": "steamsmoke:item/mixture_16"}
+  ]
 }
