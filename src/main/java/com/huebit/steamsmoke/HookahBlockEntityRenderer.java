@@ -10,6 +10,8 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.inventory.InventoryMenu;
 import org.joml.Matrix4f;
+import net.minecraft.client.renderer.LightTexture;
+
 
 public class HookahBlockEntityRenderer implements BlockEntityRenderer<HookahBlockEntity> {
 
@@ -73,7 +75,7 @@ public class HookahBlockEntityRenderer implements BlockEntityRenderer<HookahBloc
                 .getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
                 .apply(fluidType.getTextureLocation());
 
-        VertexConsumer vc = bufferSource.getBuffer(RenderType.translucent());
+        VertexConsumer vc = bufferSource.getBuffer(RenderType.solid());
         PoseStack.Pose pose = poseStack.last();
         Matrix4f matrix = pose.pose();
 
