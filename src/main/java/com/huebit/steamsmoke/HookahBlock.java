@@ -33,9 +33,6 @@ public class HookahBlock extends Block implements EntityBlock {
             Block.box(6, 10, 6, 10, 16, 10)
     );
 
-    // Сколько тиков нужно держать ПКМ для одного использования (~1.5 сек)
-    public static final int SMOKE_TICKS_REQUIRED = 30;
-
     public HookahBlock(Properties properties) {
         super(properties);
     }
@@ -51,7 +48,21 @@ public class HookahBlock extends Block implements EntityBlock {
         return new HookahBlockEntity(pos, state);
     }
 
-    // ── ПКМ с предметом ───────────────────────────────────────────────────
+    @Override
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!state.is(newState.getBlock())) {
+            if (level.getBlockEntity(pos) instanceof HookahBlockEntity hookah) {
+                if (hookah.hasMixture()) {
+                    popResource(level, pos, hookah.getMixtureStack());
+                }
+                if (!hookah.getFluidType().isEmpty()) {
+                    ItemStack bucket = getFilledBucket(hookah.getFluidType());
+                    if (!bucket.isEmpty()) popResource(level, pos, bucket);
+                }
+            }
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston);
+    }
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
@@ -61,22 +72,20 @@ public class HookahBlock extends Block implements EntityBlock {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
-        // --- Вёдра с жидкостью ---
         if (stack.is(Items.WATER_BUCKET)) return fillHookah(hookah, level, player, hand, HookahFluidType.WATER, Items.BUCKET.getDefaultInstance());
         if (stack.is(Items.LAVA_BUCKET))  return fillHookah(hookah, level, player, hand, HookahFluidType.LAVA,  Items.BUCKET.getDefaultInstance());
         if (stack.is(Items.MILK_BUCKET))  return fillHookah(hookah, level, player, hand, HookahFluidType.MILK,  Items.BUCKET.getDefaultInstance());
 
-        // --- Пустое ведро → забрать жидкость ---
         if (stack.is(Items.BUCKET) && !hookah.getFluidType().isEmpty()) {
             if (!level.isClientSide) {
                 ItemStack filled = getFilledBucket(hookah.getFluidType());
                 hookah.setFluidType(HookahFluidType.EMPTY);
                 if (!player.isCreative()) player.setItemInHand(hand, filled);
+                level.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1.0f, 1.0f);
             }
             return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
 
-        // --- Mixture → положить в кальян ---
         if (stack.is(ModItems.MIXTURE.get())) {
             if (!hookah.hasMixture()) {
                 if (!level.isClientSide) {
@@ -96,8 +105,6 @@ public class HookahBlock extends Block implements EntityBlock {
 
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
-
-    // ── ПКМ без предмета (или с шлангом) → курить ─────────────────────────
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
@@ -122,7 +129,6 @@ public class HookahBlock extends Block implements EntityBlock {
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
 
-        // Курим!
         if (!level.isClientSide) {
             smoke(hookah, level, pos, player);
         } else {
@@ -132,26 +138,20 @@ public class HookahBlock extends Block implements EntityBlock {
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
-    // ── Логика курения ────────────────────────────────────────────────────
-
     private void smoke(HookahBlockEntity hookah, Level level, BlockPos pos, Player player) {
         List<String> ingredients = MixtureItem.getIngredients(hookah.getMixtureStack());
         List<MobEffectInstance> effects = HookahSmokingRecipes.getEffects(ingredients, hookah.getFluidType());
 
-        // Применяем эффекты
         for (MobEffectInstance effect : effects) {
             player.addEffect(effect);
         }
 
-        // Лава — поджигаем на 2 секунды
         if (hookah.getFluidType() == HookahFluidType.LAVA) {
             player.setRemainingFireTicks(40);
         }
 
-        // Звук
-        level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.3f, 1.8f);
+        level.playSound(null, pos, SoundEvents.HONEY_DRINK, SoundSource.PLAYERS, 1.0f, 0.8f);
 
-        // Расходуем mixture
         boolean alive = hookah.consumeUse();
         if (!alive) {
             player.displayClientMessage(
@@ -160,7 +160,6 @@ public class HookahBlock extends Block implements EntityBlock {
     }
 
     private void spawnSmokeParticles(Level level, BlockPos pos, HookahFluidType fluid) {
-        // Дым из верхушки кальяна
         for (int i = 0; i < 6; i++) {
             double x = pos.getX() + 0.4 + level.random.nextDouble() * 0.2;
             double y = pos.getY() + 1.1;
@@ -175,14 +174,19 @@ public class HookahBlock extends Block implements EntityBlock {
         }
     }
 
-    // ── Вспомогательные ───────────────────────────────────────────────────
-
     private ItemInteractionResult fillHookah(HookahBlockEntity hookah, Level level,
                                              Player player, InteractionHand hand,
                                              HookahFluidType type, ItemStack returnStack) {
         if (!level.isClientSide) {
+            if (!hookah.getFluidType().isEmpty() && hookah.getFluidType() != type) {
+                ItemStack oldBucket = getFilledBucket(hookah.getFluidType());
+                if (!player.addItem(oldBucket)) {
+                    popResource(level, hookah.getBlockPos(), oldBucket);
+                }
+            }
             hookah.setFluidType(type);
             if (!player.isCreative()) player.setItemInHand(hand, returnStack);
+            level.playSound(null, hookah.getBlockPos(), SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0f, 1.0f);
         }
         return ItemInteractionResult.sidedSuccess(level.isClientSide);
     }
@@ -192,7 +196,7 @@ public class HookahBlock extends Block implements EntityBlock {
             case WATER -> Items.WATER_BUCKET.getDefaultInstance();
             case LAVA  -> Items.LAVA_BUCKET.getDefaultInstance();
             case MILK  -> Items.MILK_BUCKET.getDefaultInstance();
-            default    -> Items.BUCKET.getDefaultInstance();
+            default    -> ItemStack.EMPTY;
         };
     }
 }

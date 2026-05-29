@@ -45,6 +45,18 @@ public class MortarBlock extends Block implements EntityBlock {
     }
 
     @Override
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!state.is(newState.getBlock())) {
+            if (level.getBlockEntity(pos) instanceof MortarBlockEntity mortar) {
+                for (ItemStack stack : mortar.getNonEmptyItems()) {
+                    popResource(level, pos, stack);
+                }
+            }
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+
+    @Override
     protected @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack stack, @NotNull BlockState state, @NotNull Level level,
                                                        @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand,
                                                        @NotNull BlockHitResult hitResult) {
@@ -64,7 +76,7 @@ public class MortarBlock extends Block implements EntityBlock {
                             level.addFreshEntity(entity);
                         }
                     }
-                    level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.8f, 1.0f);
+                    level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.8f, 1.0f);
                 }
                 return ItemInteractionResult.sidedSuccess(level.isClientSide);
             }
@@ -122,7 +134,6 @@ public class MortarBlock extends Block implements EntityBlock {
                     return ItemInteractionResult.sidedSuccess(false);
                 }
 
-                // ИСПРАВЛЕНО: Безопасное получение пути (Path) идентификатора предмета из Holder через unwrapKey()
                 List<String> ingredients = contents.stream()
                         .map(s -> s.getItemHolder().unwrapKey()
                                 .map(key -> key.location().getPath())
@@ -135,7 +146,7 @@ public class MortarBlock extends Block implements EntityBlock {
                 mortar.addItem(mixture);
 
                 damagePestle(pestle, player, hand);
-                level.playSound(null, pos, SoundEvents.GRINDSTONE_USE, SoundSource.BLOCKS, 1.0f, 0.8f);
+                level.playSound(null, pos, SoundEvents.GRINDSTONE_USE, SoundSource.BLOCKS, 1.0f, 0.6f);
                 spawnMixParticles(level, pos);
                 player.displayClientMessage(Component.translatable("block.steamsmoke.mortar.mixed"), true);
             }
@@ -146,6 +157,15 @@ public class MortarBlock extends Block implements EntityBlock {
 
     private ItemInteractionResult handleAddItem(MortarBlockEntity mortar, ItemStack stack,
                                                 Level level, BlockPos pos, Player player) {
+        // Нельзя класть mixture обратно в ступку
+        if (stack.is(ModItems.MIXTURE.get())) {
+            if (!level.isClientSide) {
+                player.displayClientMessage(
+                        Component.translatable("block.steamsmoke.mortar.no_mixture"), true);
+            }
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+        }
+
         if (mortar.isFull()) {
             if (!level.isClientSide) {
                 player.displayClientMessage(Component.translatable("block.steamsmoke.mortar.full"), true);
@@ -155,17 +175,14 @@ public class MortarBlock extends Block implements EntityBlock {
 
         if (!level.isClientSide) {
             mortar.addItem(stack);
-            if (!player.isCreative()) {
-                stack.shrink(1);
-            }
-            level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.6f, 0.8f);
+            if (!player.isCreative()) stack.shrink(1);
+            level.playSound(null, pos, SoundEvents.STONE_PLACE, SoundSource.BLOCKS, 0.5f, 1.4f);
         }
 
         return ItemInteractionResult.sidedSuccess(level.isClientSide);
     }
 
     private void damagePestle(ItemStack pestle, Player player, InteractionHand hand) {
-        // ИСПРАВЛЕНО: Конвертируем InteractionHand в EquipmentSlot, так как старый метод удален
         EquipmentSlot slot = (hand == InteractionHand.MAIN_HAND) ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
         pestle.hurtAndBreak(1, player, slot);
     }

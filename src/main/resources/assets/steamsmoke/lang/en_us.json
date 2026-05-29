@@ -27,5 +27,6 @@
   "item.steamsmoke.mixture": "Mixture",
 
   "item.steamsmoke.mixture.empty": "Empty mixture",
-  "item.steamsmoke.mixture.contents": "Contains:"
+  "item.steamsmoke.mixture.contents": "Contains:",
+  "block.steamsmoke.mortar.no_mixture": "Cannot put mixture back into mortar"
 }
