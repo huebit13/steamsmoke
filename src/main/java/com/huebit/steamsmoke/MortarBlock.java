@@ -27,7 +27,7 @@ import java.util.List;
 
 public class MortarBlock extends Block implements EntityBlock {
 
-    private static final VoxelShape SHAPE = Block.box(3, 0, 3, 13, 7, 13);
+    private static final VoxelShape SHAPE = Block.box(4, 0, 4, 12, 6, 12);
 
     public MortarBlock(Properties properties) {
         super(properties);
@@ -157,7 +157,8 @@ public class MortarBlock extends Block implements EntityBlock {
 
     private ItemInteractionResult handleAddItem(MortarBlockEntity mortar, ItemStack stack,
                                                 Level level, BlockPos pos, Player player) {
-        // Нельзя класть mixture обратно в ступку
+        // Нельзя класть mixture обратно в ступку// MortarBlock.java
+        //private static final VoxelShape SHAPE = Block.box(4, 0, 4, 12, 6, 12);
         if (stack.is(ModItems.MIXTURE.get())) {
             if (!level.isClientSide) {
                 player.displayClientMessage(

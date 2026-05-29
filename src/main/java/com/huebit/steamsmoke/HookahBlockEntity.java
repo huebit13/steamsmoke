@@ -56,13 +56,15 @@ public class HookahBlockEntity extends BlockEntity {
      * false если сгорела (useCount достиг MAX_USES).
      */
     public boolean consumeUse() {
-        useCount++;
-        if (useCount >= HookahSmokingRecipes.MAX_USES) {
+        if (mixtureStack.isEmpty()) return false;
+
+        int damage = mixtureStack.getDamageValue() + 1;
+        if (damage >= mixtureStack.getMaxDamage()) {
             mixtureStack = ItemStack.EMPTY;
-            useCount = 0;
             syncToClients();
             return false;
         }
+        mixtureStack.setDamageValue(damage);
         syncToClients();
         return true;
     }
@@ -84,7 +86,6 @@ public class HookahBlockEntity extends BlockEntity {
     protected void saveAdditional(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.putString("FluidType", fluidType.name());
-        tag.putInt("UseCount", useCount);
         if (!mixtureStack.isEmpty()) {
             CompoundTag mixtureTag = new CompoundTag();
             mixtureStack.save(registries, mixtureTag);
@@ -96,15 +97,11 @@ public class HookahBlockEntity extends BlockEntity {
     protected void loadAdditional(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         if (tag.contains("FluidType")) {
-            try { fluidType = HookahFluidType.valueOf(tag.getString("FluidType")); }
-            catch (IllegalArgumentException e) { fluidType = HookahFluidType.EMPTY; }
-        }
-        useCount = tag.getInt("UseCount");
-        if (tag.contains("Mixture")) {
-            mixtureStack = ItemStack.parse(registries, tag.getCompound("Mixture"))
-                    .orElse(ItemStack.EMPTY);
-        } else {
-            mixtureStack = ItemStack.EMPTY;
+            try {
+                fluidType = HookahFluidType.valueOf(tag.getString("FluidType"));
+            } catch (IllegalArgumentException e) {
+                fluidType = HookahFluidType.EMPTY;
+            }
         }
     }
 
@@ -119,7 +116,6 @@ public class HookahBlockEntity extends BlockEntity {
     public @NotNull CompoundTag getUpdateTag(@NotNull HolderLookup.Provider registries) {
         CompoundTag tag = new CompoundTag();
         tag.putString("FluidType", fluidType.name());
-        tag.putInt("UseCount", useCount);
         if (!mixtureStack.isEmpty()) {
             CompoundTag mixtureTag = new CompoundTag();
             mixtureStack.save(registries, mixtureTag);

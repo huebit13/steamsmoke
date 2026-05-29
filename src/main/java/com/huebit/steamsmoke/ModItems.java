@@ -34,7 +34,7 @@ public class ModItems {
 
     // ── Замес ────────────────────────────────────────────────────────────────
     public static final DeferredItem<MixtureItem> MIXTURE = ITEMS.register(
-            "mixture", () -> new MixtureItem(new Item.Properties().stacksTo(16)));
+            "mixture", () -> new MixtureItem(new Item.Properties().stacksTo(1).durability(3)));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

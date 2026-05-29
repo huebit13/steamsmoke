@@ -29,8 +29,8 @@ import java.util.List;
 public class HookahBlock extends Block implements EntityBlock {
 
     private static final VoxelShape SHAPE = Shapes.or(
-            Block.box(4, 0, 4, 12, 10, 12),
-            Block.box(6, 10, 6, 10, 16, 10)
+            Block.box(4, 0, 4, 12, 9, 12),   // колба
+            Block.box(7, 9, 7, 9, 14, 9)      // шахта/трубка
     );
 
     public HookahBlock(Properties properties) {
