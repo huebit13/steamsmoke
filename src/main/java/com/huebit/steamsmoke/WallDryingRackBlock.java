@@ -16,6 +16,8 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -89,6 +91,19 @@ public class WallDryingRackBlock extends Block implements EntityBlock {
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         return new WallDryingRackBlockEntity(pos, state);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level,
+                                                                    @NotNull BlockState state,
+                                                                    @NotNull BlockEntityType<T> type) {
+        if (level.isClientSide) return null;
+        //noinspection unchecked
+        return type == ModBlockEntities.WALL_DRYING_RACK_BE.get()
+                ? (BlockEntityTicker<T>) (BlockEntityTicker<WallDryingRackBlockEntity>)
+                    (lvl, pos, st, be) -> DryingRackBlockEntity.serverTick(lvl, pos, st, be)
+                : null;
     }
 
     @Override

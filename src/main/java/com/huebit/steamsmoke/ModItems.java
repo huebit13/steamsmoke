@@ -16,80 +16,151 @@ public class ModItems {
     public static final DeferredItem<Item> PESTLE = ITEMS.registerSimpleItem(
             "pestle", new Item.Properties().stacksTo(1).durability(64));
 
-    // ── Измельчённые — базовые ───────────────────────────────────────────────
-    public static final DeferredItem<Item> GROUND_TOBACCO = ITEMS.registerSimpleItem(
-            "ground_tobacco", new Item.Properties().stacksTo(64));
+    // ── Высушенные (результат стойки сушки) ──────────────────────────────────
+    public static final DeferredItem<Item> DRIED_TOBACCO_LEAF = ITEMS.registerSimpleItem(
+            "dried_tobacco_leaf", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_APPLE = ITEMS.registerSimpleItem(
+            "dried_apple", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_BROWN_MUSHROOM = ITEMS.registerSimpleItem(
+            "dried_brown_mushroom", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_RED_MUSHROOM = ITEMS.registerSimpleItem(
+            "dried_red_mushroom", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_KELP_HERB = ITEMS.registerSimpleItem(
+            "dried_kelp_herb", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_MELON = ITEMS.registerSimpleItem(
+            "dried_melon", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_CACTUS = ITEMS.registerSimpleItem(
+            "dried_cactus", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_NETHER_WART = ITEMS.registerSimpleItem(
+            "dried_nether_wart", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_CRIMSON_FUNGUS = ITEMS.registerSimpleItem(
+            "dried_crimson_fungus", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_WARPED_FUNGUS = ITEMS.registerSimpleItem(
+            "dried_warped_fungus", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_CHORUS_FRUIT = ITEMS.registerSimpleItem(
+            "dried_chorus_fruit", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GLOW_BERRIES = ITEMS.registerSimpleItem(
+            "dried_glow_berries", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_PHANTOM_MEMBRANE = ITEMS.registerSimpleItem(
+            "dried_phantom_membrane", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_RABBIT_FOOT = ITEMS.registerSimpleItem(
+            "dried_rabbit_foot", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_SLIMEBALL = ITEMS.registerSimpleItem(
+            "dried_slimeball", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_SEA_PICKLE = ITEMS.registerSimpleItem(
+            "dried_sea_pickle", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_MAGMA_CREAM = ITEMS.registerSimpleItem(
+            "dried_magma_cream", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_SPIDER_EYE = ITEMS.registerSimpleItem(
+            "dried_spider_eye", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_FERMENTED_SPIDER_EYE = ITEMS.registerSimpleItem(
+            "dried_fermented_spider_eye", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_BAMBOO = ITEMS.registerSimpleItem(
+            "dried_bamboo", new Item.Properties().stacksTo(64));
 
-    public static final DeferredItem<Item> GROUND_APPLE = ITEMS.registerSimpleItem(
-            "ground_apple", new Item.Properties().stacksTo(64));
+    // ── Сырые перемолотые (без сушки; табак — только через сушку) ────────────
+    public static final DeferredItem<Item> WET_GROUND_APPLE = ITEMS.registerSimpleItem(
+            "wet_ground_apple", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> WET_GROUND_BROWN_MUSHROOM = ITEMS.registerSimpleItem(
+            "wet_ground_brown_mushroom", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> WET_GROUND_RED_MUSHROOM = ITEMS.registerSimpleItem(
+            "wet_ground_red_mushroom", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> WET_GROUND_KELP = ITEMS.registerSimpleItem(
+            "wet_ground_kelp", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> WET_GROUND_MELON = ITEMS.registerSimpleItem(
+            "wet_ground_melon", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> WET_GROUND_CACTUS = ITEMS.registerSimpleItem(
+            "wet_ground_cactus", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> WET_GROUND_NETHER_WART = ITEMS.registerSimpleItem(
+            "wet_ground_nether_wart", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> WET_GROUND_CRIMSON_FUNGUS = ITEMS.registerSimpleItem(
+            "wet_ground_crimson_fungus", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> WET_GROUND_WARPED_FUNGUS = ITEMS.registerSimpleItem(
+            "wet_ground_warped_fungus", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> WET_GROUND_CHORUS_FRUIT = ITEMS.registerSimpleItem(
+            "wet_ground_chorus_fruit", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> WET_GROUND_GLOW_BERRIES = ITEMS.registerSimpleItem(
+            "wet_ground_glow_berries", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> WET_GROUND_PHANTOM_MEMBRANE = ITEMS.registerSimpleItem(
+            "wet_ground_phantom_membrane", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> WET_GROUND_RABBIT_FOOT = ITEMS.registerSimpleItem(
+            "wet_ground_rabbit_foot", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> WET_GROUND_SLIMEBALL = ITEMS.registerSimpleItem(
+            "wet_ground_slimeball", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> WET_GROUND_SEA_PICKLE = ITEMS.registerSimpleItem(
+            "wet_ground_sea_pickle", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> WET_GROUND_MAGMA_CREAM = ITEMS.registerSimpleItem(
+            "wet_ground_magma_cream", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> WET_GROUND_SPIDER_EYE = ITEMS.registerSimpleItem(
+            "wet_ground_spider_eye", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> WET_GROUND_FERMENTED_SPIDER_EYE = ITEMS.registerSimpleItem(
+            "wet_ground_fermented_spider_eye", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> WET_GROUND_BAMBOO = ITEMS.registerSimpleItem(
+            "wet_ground_bamboo", new Item.Properties().stacksTo(64));
 
+    // ── Сушёные перемолотые (сушка + перемолка) ──────────────────────────────
+    public static final DeferredItem<Item> DRIED_GROUND_TOBACCO = ITEMS.registerSimpleItem(
+            "dried_ground_tobacco", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_APPLE = ITEMS.registerSimpleItem(
+            "dried_ground_apple", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_BROWN_MUSHROOM = ITEMS.registerSimpleItem(
+            "dried_ground_brown_mushroom", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_RED_MUSHROOM = ITEMS.registerSimpleItem(
+            "dried_ground_red_mushroom", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_KELP = ITEMS.registerSimpleItem(
+            "dried_ground_kelp", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_MELON = ITEMS.registerSimpleItem(
+            "dried_ground_melon", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_CACTUS = ITEMS.registerSimpleItem(
+            "dried_ground_cactus", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_NETHER_WART = ITEMS.registerSimpleItem(
+            "dried_ground_nether_wart", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_CRIMSON_FUNGUS = ITEMS.registerSimpleItem(
+            "dried_ground_crimson_fungus", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_WARPED_FUNGUS = ITEMS.registerSimpleItem(
+            "dried_ground_warped_fungus", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_CHORUS_FRUIT = ITEMS.registerSimpleItem(
+            "dried_ground_chorus_fruit", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_GLOW_BERRIES = ITEMS.registerSimpleItem(
+            "dried_ground_glow_berries", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_PHANTOM_MEMBRANE = ITEMS.registerSimpleItem(
+            "dried_ground_phantom_membrane", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_RABBIT_FOOT = ITEMS.registerSimpleItem(
+            "dried_ground_rabbit_foot", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_SLIMEBALL = ITEMS.registerSimpleItem(
+            "dried_ground_slimeball", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_SEA_PICKLE = ITEMS.registerSimpleItem(
+            "dried_ground_sea_pickle", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_MAGMA_CREAM = ITEMS.registerSimpleItem(
+            "dried_ground_magma_cream", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_SPIDER_EYE = ITEMS.registerSimpleItem(
+            "dried_ground_spider_eye", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_FERMENTED_SPIDER_EYE = ITEMS.registerSimpleItem(
+            "dried_ground_fermented_spider_eye", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_BAMBOO = ITEMS.registerSimpleItem(
+            "dried_ground_bamboo", new Item.Properties().stacksTo(64));
+
+    // ── Обычные перемолотые (предметы без сушки) ──────────────────────────────
     public static final DeferredItem<Item> GROUND_SUGAR = ITEMS.registerSimpleItem(
             "ground_sugar", new Item.Properties().stacksTo(64));
-
     public static final DeferredItem<Item> GROUND_SWEET_BERRIES = ITEMS.registerSimpleItem(
             "ground_sweet_berries", new Item.Properties().stacksTo(64));
-
     public static final DeferredItem<Item> GROUND_HONEYCOMB = ITEMS.registerSimpleItem(
             "ground_honeycomb", new Item.Properties().stacksTo(64));
-
-    // ── Измельчённые — ранняя игра ───────────────────────────────────────────
     public static final DeferredItem<Item> GROUND_DANDELION = ITEMS.registerSimpleItem(
             "ground_dandelion", new Item.Properties().stacksTo(64));
-
     public static final DeferredItem<Item> GROUND_POPPY = ITEMS.registerSimpleItem(
             "ground_poppy", new Item.Properties().stacksTo(64));
-
-    public static final DeferredItem<Item> GROUND_BROWN_MUSHROOM = ITEMS.registerSimpleItem(
-            "ground_brown_mushroom", new Item.Properties().stacksTo(64));
-
-    public static final DeferredItem<Item> GROUND_RED_MUSHROOM = ITEMS.registerSimpleItem(
-            "ground_red_mushroom", new Item.Properties().stacksTo(64));
-
-    public static final DeferredItem<Item> GROUND_KELP = ITEMS.registerSimpleItem(
-            "ground_kelp", new Item.Properties().stacksTo(64));
-
-    public static final DeferredItem<Item> GROUND_MELON = ITEMS.registerSimpleItem(
-            "ground_melon", new Item.Properties().stacksTo(64));
-
-    public static final DeferredItem<Item> GROUND_CACTUS = ITEMS.registerSimpleItem(
-            "ground_cactus", new Item.Properties().stacksTo(64));
-
     public static final DeferredItem<Item> GROUND_LILY_OF_THE_VALLEY = ITEMS.registerSimpleItem(
             "ground_lily_of_the_valley", new Item.Properties().stacksTo(64));
-
-    // ── Измельчённые — средняя игра (Незер / особые) ─────────────────────────
-    public static final DeferredItem<Item> GROUND_NETHER_WART = ITEMS.registerSimpleItem(
-            "ground_nether_wart", new Item.Properties().stacksTo(64));
-
-    public static final DeferredItem<Item> GROUND_CRIMSON_FUNGUS = ITEMS.registerSimpleItem(
-            "ground_crimson_fungus", new Item.Properties().stacksTo(64));
-
-    public static final DeferredItem<Item> GROUND_WARPED_FUNGUS = ITEMS.registerSimpleItem(
-            "ground_warped_fungus", new Item.Properties().stacksTo(64));
-
-    public static final DeferredItem<Item> GROUND_CHORUS_FRUIT = ITEMS.registerSimpleItem(
-            "ground_chorus_fruit", new Item.Properties().stacksTo(64));
-
-    public static final DeferredItem<Item> GROUND_GLOW_BERRIES = ITEMS.registerSimpleItem(
-            "ground_glow_berries", new Item.Properties().stacksTo(64));
-
     public static final DeferredItem<Item> GROUND_TORCHFLOWER = ITEMS.registerSimpleItem(
             "ground_torchflower", new Item.Properties().stacksTo(64));
-
-    // ── Измельчённые — поздняя игра / редкие ─────────────────────────────────
     public static final DeferredItem<Item> GROUND_BLAZE_POWDER = ITEMS.registerSimpleItem(
             "ground_blaze_powder", new Item.Properties().stacksTo(64));
-
     public static final DeferredItem<Item> GROUND_GHAST_TEAR = ITEMS.registerSimpleItem(
             "ground_ghast_tear", new Item.Properties().stacksTo(64));
-
-    public static final DeferredItem<Item> GROUND_PHANTOM_MEMBRANE = ITEMS.registerSimpleItem(
-            "ground_phantom_membrane", new Item.Properties().stacksTo(64));
-
     public static final DeferredItem<Item> GROUND_WITHER_ROSE = ITEMS.registerSimpleItem(
             "ground_wither_rose", new Item.Properties().stacksTo(64));
-
-    // ── Измельчённые — цветы ─────────────────────────────────────────────────
     public static final DeferredItem<Item> GROUND_ALLIUM = ITEMS.registerSimpleItem(
             "ground_allium", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> GROUND_SUNFLOWER = ITEMS.registerSimpleItem(
@@ -114,8 +185,6 @@ public class ModItems {
             "ground_peony", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> GROUND_ROSE_BUSH = ITEMS.registerSimpleItem(
             "ground_rose_bush", new Item.Properties().stacksTo(64));
-
-    // ── Измельчённые — еда и урожай ───────────────────────────────────────────
     public static final DeferredItem<Item> GROUND_CARROT = ITEMS.registerSimpleItem(
             "ground_carrot", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> GROUND_BEETROOT = ITEMS.registerSimpleItem(
@@ -124,38 +193,16 @@ public class ModItems {
             "ground_potato", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> GROUND_COCOA_BEANS = ITEMS.registerSimpleItem(
             "ground_cocoa_beans", new Item.Properties().stacksTo(64));
-    public static final DeferredItem<Item> GROUND_DRIED_KELP = ITEMS.registerSimpleItem(
-            "ground_dried_kelp", new Item.Properties().stacksTo(64));
-
-    // ── Измельчённые — надземный мир / разное ────────────────────────────────
-    public static final DeferredItem<Item> GROUND_RABBIT_FOOT = ITEMS.registerSimpleItem(
-            "ground_rabbit_foot", new Item.Properties().stacksTo(64));
-    public static final DeferredItem<Item> GROUND_SLIMEBALL = ITEMS.registerSimpleItem(
-            "ground_slimeball", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> GROUND_SPORE_BLOSSOM = ITEMS.registerSimpleItem(
             "ground_spore_blossom", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> GROUND_INK_SAC = ITEMS.registerSimpleItem(
             "ground_ink_sac", new Item.Properties().stacksTo(64));
-    public static final DeferredItem<Item> GROUND_SEA_PICKLE = ITEMS.registerSimpleItem(
-            "ground_sea_pickle", new Item.Properties().stacksTo(64));
-
-    // ── Измельчённые — средняя игра / вода / Незер ───────────────────────────
-    public static final DeferredItem<Item> GROUND_MAGMA_CREAM = ITEMS.registerSimpleItem(
-            "ground_magma_cream", new Item.Properties().stacksTo(64));
-    public static final DeferredItem<Item> GROUND_FERMENTED_SPIDER_EYE = ITEMS.registerSimpleItem(
-            "ground_fermented_spider_eye", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> GROUND_PRISMARINE_SHARD = ITEMS.registerSimpleItem(
             "ground_prismarine_shard", new Item.Properties().stacksTo(64));
-    public static final DeferredItem<Item> GROUND_SPIDER_EYE = ITEMS.registerSimpleItem(
-            "ground_spider_eye", new Item.Properties().stacksTo(64));
-
-    // ── Измельчённые — поздняя игра / Край ───────────────────────────────────
     public static final DeferredItem<Item> GROUND_ENDER_PEARL = ITEMS.registerSimpleItem(
             "ground_ender_pearl", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> GROUND_DRAGON_BREATH = ITEMS.registerSimpleItem(
             "ground_dragon_breath", new Item.Properties().stacksTo(64));
-    public static final DeferredItem<Item> GROUND_BAMBOO = ITEMS.registerSimpleItem(
-            "ground_bamboo", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> GROUND_PINK_PETALS = ITEMS.registerSimpleItem(
             "ground_pink_petals", new Item.Properties().stacksTo(64));
 

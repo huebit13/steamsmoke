@@ -127,7 +127,7 @@ public class MortarBlock extends Block implements EntityBlock {
                     return ItemInteractionResult.sidedSuccess(false);
                 }
 
-                boolean hasTobacco = contents.stream().anyMatch(s -> s.is(ModItems.GROUND_TOBACCO.get()));
+                boolean hasTobacco = contents.stream().anyMatch(s -> s.is(ModItems.DRIED_GROUND_TOBACCO.get()));
 
                 if (!hasTobacco) {
                     player.displayClientMessage(Component.translatable("block.steamsmoke.mortar.no_tobacco"), true);

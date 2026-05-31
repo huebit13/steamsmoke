@@ -45,6 +45,8 @@ public class WallDryingRackBlockEntity extends DryingRackBlockEntity {
             if (!getItems().get(i).isEmpty()) {
                 ItemStack taken = getItems().get(i).copy();
                 getItems().set(i, ItemStack.EMPTY);
+                dryingProgress[i] = 0;
+                dryingTotal[i]    = 0;
                 sync();
                 return taken;
             }

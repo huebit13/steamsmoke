@@ -46,11 +46,15 @@ public class HookahSmokingRecipes {
         int amplifier = (fluid == HookahFluidType.LAVA) ? 1 : 0;
 
         return switch (ingredient) {
-            case "ground_tobacco"       -> new MobEffectInstance(MobEffects.MOVEMENT_SPEED,    duration, amplifier);
-            case "ground_apple"         -> new MobEffectInstance(MobEffects.REGENERATION,      duration, amplifier);
-            case "ground_honeycomb"     -> new MobEffectInstance(MobEffects.SATURATION,        duration, amplifier);
-            case "ground_sugar"         -> new MobEffectInstance(MobEffects.DIG_SPEED,         duration, amplifier);
-            case "ground_sweet_berries" -> new MobEffectInstance(MobEffects.NIGHT_VISION,      duration, amplifier);
+            // ── Сушёные перемолотые (лучшее качество) ──────────────────────────
+            case "dried_ground_tobacco"       -> new MobEffectInstance(MobEffects.MOVEMENT_SPEED,    duration, amplifier);
+            case "dried_ground_apple"         -> new MobEffectInstance(MobEffects.REGENERATION,      duration, amplifier);
+            // ── Сырые перемолотые (сниженная длительность) ──────────────────────
+            case "wet_ground_apple"           -> new MobEffectInstance(MobEffects.REGENERATION,      duration / 2, amplifier);
+            // ── Одиночные (без сушки) ────────────────────────────────────────────
+            case "ground_honeycomb"           -> new MobEffectInstance(MobEffects.SATURATION,        duration, amplifier);
+            case "ground_sugar"               -> new MobEffectInstance(MobEffects.DIG_SPEED,         duration, amplifier);
+            case "ground_sweet_berries"       -> new MobEffectInstance(MobEffects.NIGHT_VISION,      duration, amplifier);
             default -> null;
         };
     }

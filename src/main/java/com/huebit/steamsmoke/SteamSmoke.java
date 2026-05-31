@@ -71,39 +71,110 @@ public class SteamSmoke {
                             .title(Component.translatable("itemGroup.steamsmoke"))
                             .icon(() -> HOOKAH_ITEM.get().getDefaultInstance())
                             .displayItems((params, output) -> {
+                                // ── Блоки и инструменты ───────────────────────────────
                                 output.accept(HOOKAH_ITEM.get());
                                 output.accept(MORTAR_ITEM.get());
                                 output.accept(DRYING_RACK_ITEM.get());
                                 output.accept(WALL_DRYING_RACK_ITEM.get());
                                 output.accept(ModItems.PESTLE.get());
+                                // ── Сырьё ────────────────────────────────────────────
                                 output.accept(ModItems.TOBACCO_LEAF.get());
-                                // Базовые перемолотые
-                                output.accept(ModItems.GROUND_TOBACCO.get());
-                                output.accept(ModItems.GROUND_APPLE.get());
+                                // ── Высушенные ───────────────────────────────────────
+                                output.accept(ModItems.DRIED_TOBACCO_LEAF.get());
+                                output.accept(ModItems.DRIED_APPLE.get());
+                                output.accept(ModItems.DRIED_BROWN_MUSHROOM.get());
+                                output.accept(ModItems.DRIED_RED_MUSHROOM.get());
+                                output.accept(ModItems.DRIED_KELP_HERB.get());
+                                output.accept(ModItems.DRIED_MELON.get());
+                                output.accept(ModItems.DRIED_CACTUS.get());
+                                output.accept(ModItems.DRIED_NETHER_WART.get());
+                                output.accept(ModItems.DRIED_CRIMSON_FUNGUS.get());
+                                output.accept(ModItems.DRIED_WARPED_FUNGUS.get());
+                                output.accept(ModItems.DRIED_CHORUS_FRUIT.get());
+                                output.accept(ModItems.DRIED_GLOW_BERRIES.get());
+                                output.accept(ModItems.DRIED_PHANTOM_MEMBRANE.get());
+                                output.accept(ModItems.DRIED_RABBIT_FOOT.get());
+                                output.accept(ModItems.DRIED_SLIMEBALL.get());
+                                output.accept(ModItems.DRIED_SEA_PICKLE.get());
+                                output.accept(ModItems.DRIED_MAGMA_CREAM.get());
+                                output.accept(ModItems.DRIED_SPIDER_EYE.get());
+                                output.accept(ModItems.DRIED_FERMENTED_SPIDER_EYE.get());
+                                output.accept(ModItems.DRIED_BAMBOO.get());
+                                // ── Сырые перемолотые (wet_ground) ───────────────────
+                                output.accept(ModItems.WET_GROUND_APPLE.get());
+                                output.accept(ModItems.WET_GROUND_BROWN_MUSHROOM.get());
+                                output.accept(ModItems.WET_GROUND_RED_MUSHROOM.get());
+                                output.accept(ModItems.WET_GROUND_KELP.get());
+                                output.accept(ModItems.WET_GROUND_MELON.get());
+                                output.accept(ModItems.WET_GROUND_CACTUS.get());
+                                output.accept(ModItems.WET_GROUND_NETHER_WART.get());
+                                output.accept(ModItems.WET_GROUND_CRIMSON_FUNGUS.get());
+                                output.accept(ModItems.WET_GROUND_WARPED_FUNGUS.get());
+                                output.accept(ModItems.WET_GROUND_CHORUS_FRUIT.get());
+                                output.accept(ModItems.WET_GROUND_GLOW_BERRIES.get());
+                                output.accept(ModItems.WET_GROUND_PHANTOM_MEMBRANE.get());
+                                output.accept(ModItems.WET_GROUND_RABBIT_FOOT.get());
+                                output.accept(ModItems.WET_GROUND_SLIMEBALL.get());
+                                output.accept(ModItems.WET_GROUND_SEA_PICKLE.get());
+                                output.accept(ModItems.WET_GROUND_MAGMA_CREAM.get());
+                                output.accept(ModItems.WET_GROUND_SPIDER_EYE.get());
+                                output.accept(ModItems.WET_GROUND_FERMENTED_SPIDER_EYE.get());
+                                output.accept(ModItems.WET_GROUND_BAMBOO.get());
+                                // ── Сушёные перемолотые (dried_ground) ───────────────
+                                output.accept(ModItems.DRIED_GROUND_TOBACCO.get());
+                                output.accept(ModItems.DRIED_GROUND_APPLE.get());
+                                output.accept(ModItems.DRIED_GROUND_BROWN_MUSHROOM.get());
+                                output.accept(ModItems.DRIED_GROUND_RED_MUSHROOM.get());
+                                output.accept(ModItems.DRIED_GROUND_KELP.get());
+                                output.accept(ModItems.DRIED_GROUND_MELON.get());
+                                output.accept(ModItems.DRIED_GROUND_CACTUS.get());
+                                output.accept(ModItems.DRIED_GROUND_NETHER_WART.get());
+                                output.accept(ModItems.DRIED_GROUND_CRIMSON_FUNGUS.get());
+                                output.accept(ModItems.DRIED_GROUND_WARPED_FUNGUS.get());
+                                output.accept(ModItems.DRIED_GROUND_CHORUS_FRUIT.get());
+                                output.accept(ModItems.DRIED_GROUND_GLOW_BERRIES.get());
+                                output.accept(ModItems.DRIED_GROUND_PHANTOM_MEMBRANE.get());
+                                output.accept(ModItems.DRIED_GROUND_RABBIT_FOOT.get());
+                                output.accept(ModItems.DRIED_GROUND_SLIMEBALL.get());
+                                output.accept(ModItems.DRIED_GROUND_SEA_PICKLE.get());
+                                output.accept(ModItems.DRIED_GROUND_MAGMA_CREAM.get());
+                                output.accept(ModItems.DRIED_GROUND_SPIDER_EYE.get());
+                                output.accept(ModItems.DRIED_GROUND_FERMENTED_SPIDER_EYE.get());
+                                output.accept(ModItems.DRIED_GROUND_BAMBOO.get());
+                                // ── Обычные перемолотые ───────────────────────────────
                                 output.accept(ModItems.GROUND_SUGAR.get());
                                 output.accept(ModItems.GROUND_SWEET_BERRIES.get());
                                 output.accept(ModItems.GROUND_HONEYCOMB.get());
-                                // Ранняя игра
                                 output.accept(ModItems.GROUND_DANDELION.get());
                                 output.accept(ModItems.GROUND_POPPY.get());
-                                output.accept(ModItems.GROUND_BROWN_MUSHROOM.get());
-                                output.accept(ModItems.GROUND_RED_MUSHROOM.get());
-                                output.accept(ModItems.GROUND_KELP.get());
-                                output.accept(ModItems.GROUND_MELON.get());
-                                output.accept(ModItems.GROUND_CACTUS.get());
                                 output.accept(ModItems.GROUND_LILY_OF_THE_VALLEY.get());
-                                // Средняя игра
-                                output.accept(ModItems.GROUND_NETHER_WART.get());
-                                output.accept(ModItems.GROUND_CRIMSON_FUNGUS.get());
-                                output.accept(ModItems.GROUND_WARPED_FUNGUS.get());
-                                output.accept(ModItems.GROUND_CHORUS_FRUIT.get());
-                                output.accept(ModItems.GROUND_GLOW_BERRIES.get());
                                 output.accept(ModItems.GROUND_TORCHFLOWER.get());
-                                // Поздняя игра
                                 output.accept(ModItems.GROUND_BLAZE_POWDER.get());
                                 output.accept(ModItems.GROUND_GHAST_TEAR.get());
-                                output.accept(ModItems.GROUND_PHANTOM_MEMBRANE.get());
                                 output.accept(ModItems.GROUND_WITHER_ROSE.get());
+                                output.accept(ModItems.GROUND_ALLIUM.get());
+                                output.accept(ModItems.GROUND_SUNFLOWER.get());
+                                output.accept(ModItems.GROUND_CORNFLOWER.get());
+                                output.accept(ModItems.GROUND_AZURE_BLUET.get());
+                                output.accept(ModItems.GROUND_OXEYE_DAISY.get());
+                                output.accept(ModItems.GROUND_RED_TULIP.get());
+                                output.accept(ModItems.GROUND_ORANGE_TULIP.get());
+                                output.accept(ModItems.GROUND_WHITE_TULIP.get());
+                                output.accept(ModItems.GROUND_PINK_TULIP.get());
+                                output.accept(ModItems.GROUND_LILAC.get());
+                                output.accept(ModItems.GROUND_PEONY.get());
+                                output.accept(ModItems.GROUND_ROSE_BUSH.get());
+                                output.accept(ModItems.GROUND_CARROT.get());
+                                output.accept(ModItems.GROUND_BEETROOT.get());
+                                output.accept(ModItems.GROUND_POTATO.get());
+                                output.accept(ModItems.GROUND_COCOA_BEANS.get());
+                                output.accept(ModItems.GROUND_SPORE_BLOSSOM.get());
+                                output.accept(ModItems.GROUND_INK_SAC.get());
+                                output.accept(ModItems.GROUND_PRISMARINE_SHARD.get());
+                                output.accept(ModItems.GROUND_ENDER_PEARL.get());
+                                output.accept(ModItems.GROUND_DRAGON_BREATH.get());
+                                output.accept(ModItems.GROUND_PINK_PETALS.get());
+                                // ── Замес ─────────────────────────────────────────────
                                 output.accept(ModItems.MIXTURE.get());
                             })
                             .build()
