@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "half=lower": { "model": "steamsmoke:block/drying_rack" },
+    "half=upper": { "model": "steamsmoke:block/drying_rack_upper" }
+  }
+}

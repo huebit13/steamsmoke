@@ -47,6 +47,15 @@ public class SteamSmoke {
     );
     public static final DeferredItem<BlockItem> MORTAR_ITEM = ITEMS.registerSimpleBlockItem("mortar", MORTAR);
 
+    public static final DeferredBlock<Block> DRYING_RACK = BLOCKS.register("drying_rack",
+            () -> new DryingRackBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.WOOD)
+                    .strength(1.5f)
+                    .noOcclusion()
+            )
+    );
+    public static final DeferredItem<BlockItem> DRYING_RACK_ITEM = ITEMS.registerSimpleBlockItem("drying_rack", DRYING_RACK);
+
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> STEAM_SMOKE_TAB =
             CREATIVE_TABS.register("steam_smoke_tab", () ->
                     CreativeModeTab.builder()
@@ -55,13 +64,36 @@ public class SteamSmoke {
                             .displayItems((params, output) -> {
                                 output.accept(HOOKAH_ITEM.get());
                                 output.accept(MORTAR_ITEM.get());
+                                output.accept(DRYING_RACK_ITEM.get());
                                 output.accept(ModItems.PESTLE.get());
                                 output.accept(ModItems.TOBACCO_LEAF.get());
+                                // Базовые перемолотые
                                 output.accept(ModItems.GROUND_TOBACCO.get());
                                 output.accept(ModItems.GROUND_APPLE.get());
                                 output.accept(ModItems.GROUND_SUGAR.get());
                                 output.accept(ModItems.GROUND_SWEET_BERRIES.get());
                                 output.accept(ModItems.GROUND_HONEYCOMB.get());
+                                // Ранняя игра
+                                output.accept(ModItems.GROUND_DANDELION.get());
+                                output.accept(ModItems.GROUND_POPPY.get());
+                                output.accept(ModItems.GROUND_BROWN_MUSHROOM.get());
+                                output.accept(ModItems.GROUND_RED_MUSHROOM.get());
+                                output.accept(ModItems.GROUND_KELP.get());
+                                output.accept(ModItems.GROUND_MELON.get());
+                                output.accept(ModItems.GROUND_CACTUS.get());
+                                output.accept(ModItems.GROUND_LILY_OF_THE_VALLEY.get());
+                                // Средняя игра
+                                output.accept(ModItems.GROUND_NETHER_WART.get());
+                                output.accept(ModItems.GROUND_CRIMSON_FUNGUS.get());
+                                output.accept(ModItems.GROUND_WARPED_FUNGUS.get());
+                                output.accept(ModItems.GROUND_CHORUS_FRUIT.get());
+                                output.accept(ModItems.GROUND_GLOW_BERRIES.get());
+                                output.accept(ModItems.GROUND_TORCHFLOWER.get());
+                                // Поздняя игра
+                                output.accept(ModItems.GROUND_BLAZE_POWDER.get());
+                                output.accept(ModItems.GROUND_GHAST_TEAR.get());
+                                output.accept(ModItems.GROUND_PHANTOM_MEMBRANE.get());
+                                output.accept(ModItems.GROUND_WITHER_ROSE.get());
                                 output.accept(ModItems.MIXTURE.get());
                             })
                             .build()

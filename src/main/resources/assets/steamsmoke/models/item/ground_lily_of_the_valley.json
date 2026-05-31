@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "steamsmoke:item/ground_lily_of_the_valley"
+  }
+}

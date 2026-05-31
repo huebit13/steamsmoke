@@ -19,6 +19,10 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("mortar_be", () ->
                     BlockEntityType.Builder.of(MortarBlockEntity::new, SteamSmoke.MORTAR.get()).build(null));
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DryingRackBlockEntity>> DRYING_RACK_BE =
+            BLOCK_ENTITIES.register("drying_rack_be", () ->
+                    BlockEntityType.Builder.of(DryingRackBlockEntity::new, SteamSmoke.DRYING_RACK.get()).build(null));
+
     public static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);
     }
