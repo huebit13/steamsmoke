@@ -56,6 +56,15 @@ public class SteamSmoke {
     );
     public static final DeferredItem<BlockItem> DRYING_RACK_ITEM = ITEMS.registerSimpleBlockItem("drying_rack", DRYING_RACK);
 
+    public static final DeferredBlock<Block> WALL_DRYING_RACK = BLOCKS.register("wall_drying_rack",
+            () -> new WallDryingRackBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.WOOD)
+                    .strength(1.5f)
+                    .noOcclusion()
+            )
+    );
+    public static final DeferredItem<BlockItem> WALL_DRYING_RACK_ITEM = ITEMS.registerSimpleBlockItem("wall_drying_rack", WALL_DRYING_RACK);
+
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> STEAM_SMOKE_TAB =
             CREATIVE_TABS.register("steam_smoke_tab", () ->
                     CreativeModeTab.builder()
@@ -65,6 +74,7 @@ public class SteamSmoke {
                                 output.accept(HOOKAH_ITEM.get());
                                 output.accept(MORTAR_ITEM.get());
                                 output.accept(DRYING_RACK_ITEM.get());
+                                output.accept(WALL_DRYING_RACK_ITEM.get());
                                 output.accept(ModItems.PESTLE.get());
                                 output.accept(ModItems.TOBACCO_LEAF.get());
                                 // Базовые перемолотые

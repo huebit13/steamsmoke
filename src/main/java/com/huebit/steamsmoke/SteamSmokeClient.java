@@ -28,5 +28,7 @@ public class SteamSmokeClient {
     public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModBlockEntities.HOOKAH_BE.get(), HookahBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.MORTAR_BE.get(), MortarBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.DRYING_RACK_BE.get(), DryingRackBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.WALL_DRYING_RACK_BE.get(), WallDryingRackBlockEntityRenderer::new);
     }
 }

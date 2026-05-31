@@ -23,6 +23,10 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("drying_rack_be", () ->
                     BlockEntityType.Builder.of(DryingRackBlockEntity::new, SteamSmoke.DRYING_RACK.get()).build(null));
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WallDryingRackBlockEntity>> WALL_DRYING_RACK_BE =
+            BLOCK_ENTITIES.register("wall_drying_rack_be", () ->
+                    BlockEntityType.Builder.of(WallDryingRackBlockEntity::new, SteamSmoke.WALL_DRYING_RACK.get()).build(null));
+
     public static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);
     }

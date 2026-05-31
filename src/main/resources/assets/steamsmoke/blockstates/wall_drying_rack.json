@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "steamsmoke:block/wall_drying_rack" },
+    "facing=south": { "model": "steamsmoke:block/wall_drying_rack", "y": 180 },
+    "facing=east":  { "model": "steamsmoke:block/wall_drying_rack", "y": 90 },
+    "facing=west":  { "model": "steamsmoke:block/wall_drying_rack", "y": 270 }
+  }
+}

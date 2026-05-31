@@ -1,6 +1,7 @@
 package com.huebit.steamsmoke;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -13,98 +14,71 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class DryingRackBlock extends Block implements EntityBlock {
+public class WallDryingRackBlock extends Block implements EntityBlock {
 
-    public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    private static final VoxelShape SHAPE_LOWER = Shapes.or(
-            Block.box(2, 0, 6, 3, 16, 9),
-            Block.box(13, 0, 6, 14, 16, 9),
-            Block.box(3, 12, 7, 13, 13, 8)
-    );
-    private static final VoxelShape SHAPE_UPPER = Shapes.or(
-            Block.box(2, 0, 7, 3, 8, 8),
-            Block.box(13, 0, 7, 14, 8, 8),
-            Block.box(3, 7, 7, 13, 8, 8)
-    );
+    private static final VoxelShape SHAPE_SOUTH = Block.box(0, 11, 15, 16, 13, 16);
+    private static final VoxelShape SHAPE_NORTH = Block.box(0, 11,  0, 16, 13,  1);
+    private static final VoxelShape SHAPE_EAST  = Block.box(15, 11, 0, 16, 13, 16);
+    private static final VoxelShape SHAPE_WEST  = Block.box( 0, 11, 0,  1, 13, 16);
 
-    public DryingRackBlock(Properties properties) {
+    public WallDryingRackBlock(Properties properties) {
         super(properties);
-        registerDefaultState(defaultBlockState().setValue(HALF, DoubleBlockHalf.LOWER));
+        registerDefaultState(defaultBlockState().setValue(FACING, Direction.SOUTH));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(HALF);
+        builder.add(FACING);
     }
 
     @Override
     public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter level,
                                          @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? SHAPE_LOWER : SHAPE_UPPER;
+        return switch (state.getValue(FACING)) {
+            case NORTH -> SHAPE_SOUTH; // лицом на север = стена на юге
+            case SOUTH -> SHAPE_NORTH; // лицом на юг = стена на севере
+            case EAST  -> SHAPE_WEST;  // лицом на восток = стена на западе
+            case WEST  -> SHAPE_EAST;  // лицом на запад = стена на востоке
+            default    -> SHAPE_SOUTH;
+        };
     }
 
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        BlockPos pos = context.getClickedPos();
-        Level level = context.getLevel();
-        if (pos.getY() < level.getMaxBuildHeight() - 1 && level.getBlockState(pos.above()).canBeReplaced(context)) {
-            return defaultBlockState().setValue(HALF, DoubleBlockHalf.LOWER);
-        }
-        return null;
+        Direction face = context.getClickedFace();
+        if (face.getAxis().isVertical()) return null;
+        return defaultBlockState().setValue(FACING, face);
     }
 
     @Override
     public boolean canSurvive(@NotNull BlockState state, @NotNull LevelReader level, @NotNull BlockPos pos) {
-        if (state.getValue(HALF) == DoubleBlockHalf.UPPER) {
-            BlockState below = level.getBlockState(pos.below());
-            return below.is(this) && below.getValue(HALF) == DoubleBlockHalf.LOWER;
-        }
-        return level.getBlockState(pos.above()).canBeReplaced();
-    }
-
-    @Override
-    public void setPlacedBy(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state,
-                             @Nullable net.minecraft.world.entity.LivingEntity placer, @NotNull ItemStack stack) {
-        if (!level.isClientSide) {
-            level.setBlock(pos.above(), defaultBlockState().setValue(HALF, DoubleBlockHalf.UPPER), Block.UPDATE_ALL);
-        }
+        Direction facing = state.getValue(FACING);
+        BlockPos wallPos = pos.relative(facing.getOpposite());
+        return level.getBlockState(wallPos).isFaceSturdy(level, wallPos, facing);
     }
 
     @Override
     public void onRemove(BlockState state, @NotNull Level level, @NotNull BlockPos pos,
                           @NotNull BlockState newState, boolean movedByPiston) {
         if (!state.is(newState.getBlock())) {
-            if (state.getValue(HALF) == DoubleBlockHalf.LOWER) {
-                if (level.getBlockEntity(pos) instanceof DryingRackBlockEntity rack) {
-                    for (ItemStack stack : rack.getNonEmptyItems()) {
-                        popResource(level, pos, stack);
-                    }
-                }
-                BlockState upper = level.getBlockState(pos.above());
-                if (upper.is(this) && upper.getValue(HALF) == DoubleBlockHalf.UPPER) {
-                    level.setBlock(pos.above(), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
-                }
-            } else {
-                BlockState lower = level.getBlockState(pos.below());
-                if (lower.is(this) && lower.getValue(HALF) == DoubleBlockHalf.LOWER) {
-                    level.setBlock(pos.below(), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+            if (level.getBlockEntity(pos) instanceof WallDryingRackBlockEntity rack) {
+                for (ItemStack stack : rack.getNonEmptyItems()) {
+                    popResource(level, pos, stack);
                 }
             }
         }
@@ -114,7 +88,7 @@ public class DryingRackBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? new DryingRackBlockEntity(pos, state) : null;
+        return new WallDryingRackBlockEntity(pos, state);
     }
 
     @Override
@@ -122,9 +96,7 @@ public class DryingRackBlock extends Block implements EntityBlock {
                                                         @NotNull Level level, @NotNull BlockPos pos,
                                                         @NotNull Player player, @NotNull InteractionHand hand,
                                                         @NotNull BlockHitResult hitResult) {
-        BlockPos lowerPos = state.getValue(HALF) == DoubleBlockHalf.UPPER ? pos.below() : pos;
-
-        if (!(level.getBlockEntity(lowerPos) instanceof DryingRackBlockEntity rack)) {
+        if (!(level.getBlockEntity(pos) instanceof WallDryingRackBlockEntity rack)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
@@ -134,10 +106,10 @@ public class DryingRackBlock extends Block implements EntityBlock {
                     ItemStack taken = rack.takeItem();
                     if (!player.addItem(taken)) {
                         ItemEntity entity = new ItemEntity(level,
-                                lowerPos.getX() + 0.5, lowerPos.getY() + 1.0, lowerPos.getZ() + 0.5, taken);
+                                pos.getX() + 0.5, pos.getY() + 0.8, pos.getZ() + 0.5, taken);
                         level.addFreshEntity(entity);
                     }
-                    level.playSound(null, lowerPos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.8f, 1.0f);
+                    level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.8f, 1.0f);
                 }
                 return ItemInteractionResult.sidedSuccess(level.isClientSide);
             }
@@ -151,7 +123,7 @@ public class DryingRackBlock extends Block implements EntityBlock {
         if (!level.isClientSide) {
             boolean added = rack.addItem(stack.copyWithCount(1));
             if (added && !player.isCreative()) stack.shrink(1);
-            level.playSound(null, lowerPos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.6f, 0.8f);
+            level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.6f, 0.8f);
         }
 
         return ItemInteractionResult.sidedSuccess(level.isClientSide);

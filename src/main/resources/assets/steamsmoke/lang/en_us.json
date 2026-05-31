@@ -4,6 +4,7 @@
   "block.steamsmoke.hookah": "Hookah",
   "block.steamsmoke.mortar": "Mortar",
   "block.steamsmoke.drying_rack": "Drying Rack",
+  "block.steamsmoke.wall_drying_rack": "Wall Drying Rack",
 
   "block.steamsmoke.hookah.no_mixture": "No mixture loaded",
   "block.steamsmoke.hookah.no_fluid": "Fill the hookah with water, milk or lava first",
