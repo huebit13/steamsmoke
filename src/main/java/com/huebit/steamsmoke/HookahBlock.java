@@ -142,6 +142,8 @@ public class HookahBlock extends Block implements EntityBlock {
         List<String> ingredients = MixtureItem.getIngredients(hookah.getMixtureStack());
         List<MobEffectInstance> effects = HookahSmokingRecipes.getEffects(ingredients, hookah.getFluidType());
 
+        SmokingDiscoveries.recordSmoke(player, ingredients);
+
         for (MobEffectInstance effect : effects) {
             player.addEffect(effect);
         }

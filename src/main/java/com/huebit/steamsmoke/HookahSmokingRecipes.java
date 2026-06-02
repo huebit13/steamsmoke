@@ -12,6 +12,8 @@ public class HookahSmokingRecipes {
 
     public static final int MAX_USES = 3;
 
+    public record SynergyInfo(String name, List<String> required, List<MobEffectInstance> bonus) {}
+
     // Тиры длительности (тики; 20 = 1 секунда)
     private static final int D_BRIEF    =  600;  // 0:30 — побочные эффекты, вспышки
     private static final int D_POWERFUL = 1200;  // 1:00 — редкие/сильные
@@ -20,6 +22,29 @@ public class HookahSmokingRecipes {
     private static final int D_UTILITY  = 6000;  // 5:00 — ночное зрение, дыхание в воде
 
     // ── Публичный API ────────────────────────────────────────────────────────
+
+    /** Базовые эффекты одного ингредиента (жидкость — вода). Пустой список = нет рецепта. */
+    public static List<MobEffectInstance> getBaseEffects(String ingredient) {
+        return getIngredientEffects(ingredient, HookahFluidType.WATER);
+    }
+
+    /** Активные синергии для данного набора ингредиентов. */
+    public static List<SynergyInfo> getActiveSynergies(List<String> ingredients, HookahFluidType fluid) {
+        List<SynergyInfo> result = new ArrayList<>();
+
+        if (has(ingredients, "dried_ground_tobacco", "dried_ground_apple")) {
+            result.add(new SynergyInfo("Классический бленд",
+                    List.of("dried_ground_tobacco", "dried_ground_apple"),
+                    List.of(new MobEffectInstance(MobEffects.ABSORPTION, dur(D_STANDARD, fluid), 0))));
+        }
+        if (has(ingredients, "dried_ground_brown_mushroom", "dried_ground_red_mushroom")) {
+            result.add(new SynergyInfo("Полная микология",
+                    List.of("dried_ground_brown_mushroom", "dried_ground_red_mushroom"),
+                    List.of(new MobEffectInstance(MobEffects.JUMP, dur(D_STANDARD, fluid), 2))));
+        }
+
+        return result;
+    }
 
     public static List<MobEffectInstance> getEffects(List<String> ingredients, HookahFluidType fluid) {
         List<MobEffectInstance> effects = new ArrayList<>();
@@ -53,8 +78,14 @@ public class HookahSmokingRecipes {
                     new MobEffectInstance(MobEffects.SATURATION,   dur(D_STANDARD, fluid), 0));
             case "ground_ghast_tear"                -> one(MobEffects.REGENERATION,      dur(D_POWERFUL, fluid), a + 2);
             case "dried_ground_leaves"              -> one(MobEffects.SATURATION,        dur(D_STANDARD, fluid), 0);
-            case "ground_moss"                      -> one(MobEffects.REGENERATION,      dur(D_STANDARD, fluid), 0);
-            case "ground_dandelion"                 -> one(MobEffects.REGENERATION,      dur(D_STANDARD, fluid), 0);
+            // Мох: самый долгий базовый реген — медленно, но терпеливо, как каменный мох
+            case "ground_moss"                      -> two(
+                    new MobEffectInstance(MobEffects.REGENERATION,    dur(D_UTILITY,   fluid), 0),
+                    new MobEffectInstance(MobEffects.WATER_BREATHING, dur(D_POWERFUL,  fluid), 0));
+            // Одуванчик: золотые сердца — лекарственная трава, горьковатая но питательная
+            case "ground_dandelion"                 -> two(
+                    new MobEffectInstance(MobEffects.ABSORPTION,  dur(D_POWERFUL, fluid), 0),
+                    new MobEffectInstance(MobEffects.SATURATION,  dur(D_BRIEF,    fluid), 0));
             case "dried_ground_glow_berries"        -> one(MobEffects.NIGHT_VISION,      dur(D_UTILITY,  fluid), 0);
 
             // ── Stimulant ────────────────────────────────────────────────────
@@ -79,7 +110,10 @@ public class HookahSmokingRecipes {
             case "dried_ground_red_mushroom"        -> one(MobEffects.JUMP,              dur(D_STANDARD, fluid), a + 1);
             case "dried_ground_cactus"              -> one(MobEffects.DAMAGE_RESISTANCE, dur(D_STANDARD, fluid), a);
             case "ground_torchflower"               -> one(MobEffects.FIRE_RESISTANCE,   dur(D_LONG,     fluid), 0);
-            case "ground_allium"                    -> one(MobEffects.DAMAGE_RESISTANCE, dur(D_POWERFUL, fluid), 0);
+            // Лук-порей/чеснок: защита и бойцовский дух
+            case "ground_allium"                    -> two(
+                    new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, dur(D_STANDARD, fluid), 0),
+                    new MobEffectInstance(MobEffects.DAMAGE_BOOST,      dur(D_POWERFUL, fluid), 0));
 
             // ── Mystic ───────────────────────────────────────────────────────
             case "dried_ground_chorus_fruit"        -> two(
@@ -92,8 +126,8 @@ public class HookahSmokingRecipes {
                     new MobEffectInstance(MobEffects.MOVEMENT_SPEED, dur(D_BRIEF, fluid), a + 2),
                     new MobEffectInstance(MobEffects.DIG_SPEED,      dur(D_BRIEF, fluid), a));
             case "ground_echo_shard"                -> two(
-                    new MobEffectInstance(MobEffects.DARKNESS,    D_BRIEF / 2,             0),
-                    new MobEffectInstance(MobEffects.NIGHT_VISION, dur(D_UTILITY, fluid),  0));
+                    new MobEffectInstance(MobEffects.DARKNESS,     D_BRIEF / 2,             0),
+                    new MobEffectInstance(MobEffects.NIGHT_VISION, dur(D_UTILITY, fluid),   0));
             case "ground_amethyst"                  -> two(
                     new MobEffectInstance(MobEffects.GLOWING,           dur(D_STANDARD, fluid), 0),
                     new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, dur(D_POWERFUL, fluid), 0));
@@ -101,23 +135,61 @@ public class HookahSmokingRecipes {
             // ── Цветы ────────────────────────────────────────────────────────
             case "ground_honeycomb"                 -> one(MobEffects.SATURATION,        dur(D_STANDARD, fluid), 0);
             case "ground_sweet_berries"             -> one(MobEffects.NIGHT_VISION,      dur(D_LONG,     fluid), 0);
-            case "ground_poppy"                     -> one(MobEffects.NIGHT_VISION,      dur(D_POWERFUL, fluid), 0);
-            case "ground_lily_of_the_valley"        -> one(MobEffects.POISON,            dur(D_BRIEF,    fluid), 0);
-            case "ground_spore_blossom"             -> two(
+            // Мак: опийный туман — видишь в темноте, но замедляешься
+            case "ground_poppy"                     -> two(
+                    new MobEffectInstance(MobEffects.NIGHT_VISION,      dur(D_STANDARD, fluid), 0),
+                    new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, dur(D_BRIEF,    fluid), 0));
+            // Ландыш: маленький яд, но то что не убивает — делает сильнее
+            case "ground_lily_of_the_valley"        -> two(
+                    new MobEffectInstance(MobEffects.POISON,            dur(D_BRIEF,    fluid), 0),
+                    new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, dur(D_STANDARD, fluid), 0));
+            // Споровый цветок: медитативное трио — сытость, покой, восстановление
+            case "ground_spore_blossom"             -> three(
                     new MobEffectInstance(MobEffects.SATURATION,        dur(D_POWERFUL, fluid), 0),
-                    new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, dur(D_POWERFUL, fluid), 0));
-            case "ground_cornflower"                -> one(MobEffects.DIG_SPEED,         dur(D_POWERFUL, fluid), 0);
-            case "ground_pink_petals"               -> one(MobEffects.REGENERATION,      dur(D_POWERFUL, fluid), 0);
-            case "ground_sunflower"                 -> one(MobEffects.MOVEMENT_SPEED,    dur(D_POWERFUL, fluid), 0);
-            case "ground_oxeye_daisy"               -> one(MobEffects.DAMAGE_RESISTANCE, dur(D_BRIEF,    fluid), 0);
-            case "ground_peony"                     -> one(MobEffects.SATURATION,        dur(D_POWERFUL, fluid), 0);
-            case "ground_lilac"                     -> one(MobEffects.NIGHT_VISION,      dur(D_POWERFUL, fluid), 0);
-            case "ground_rose_bush"                 -> one(MobEffects.DAMAGE_BOOST,      dur(D_BRIEF,    fluid), 0);
-            case "ground_azure_bluet"               -> one(MobEffects.ABSORPTION,        dur(D_BRIEF,    fluid), 0);
-            case "ground_pink_tulip"                -> one(MobEffects.REGENERATION,      dur(D_BRIEF,    fluid), 0);
-            case "ground_red_tulip"                 -> one(MobEffects.DAMAGE_BOOST,      dur(D_BRIEF,    fluid), 0);
-            case "ground_orange_tulip"              -> one(MobEffects.MOVEMENT_SPEED,    dur(D_BRIEF,    fluid), 0);
-            case "ground_white_tulip"               -> one(MobEffects.DAMAGE_RESISTANCE, dur(D_BRIEF,    fluid), 0);
+                    new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, dur(D_POWERFUL, fluid), 0),
+                    new MobEffectInstance(MobEffects.REGENERATION,      dur(D_POWERFUL, fluid), 0));
+            // Василёк: ясность синего неба — работаешь и видишь далеко
+            case "ground_cornflower"                -> two(
+                    new MobEffectInstance(MobEffects.DIG_SPEED,    dur(D_STANDARD, fluid), a),
+                    new MobEffectInstance(MobEffects.NIGHT_VISION, dur(D_POWERFUL, fluid), 0));
+            case "ground_pink_petals"               -> one(MobEffects.REGENERATION,      dur(D_STANDARD, fluid), 0);
+            // Подсолнух: солнечная энергия — тянешься вверх и вперёд
+            case "ground_sunflower"                 -> two(
+                    new MobEffectInstance(MobEffects.MOVEMENT_SPEED, dur(D_STANDARD, fluid), 0),
+                    new MobEffectInstance(MobEffects.JUMP,           dur(D_POWERFUL, fluid), 0));
+            // Нивяник: стойкость быка — скромный, но надёжный
+            case "ground_oxeye_daisy"               -> two(
+                    new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, dur(D_STANDARD, fluid), 0),
+                    new MobEffectInstance(MobEffects.SATURATION,        dur(D_BRIEF,    fluid), 0));
+            // Пион: пышный и обильный — сытость с бонусом
+            case "ground_peony"                     -> two(
+                    new MobEffectInstance(MobEffects.SATURATION,  dur(D_STANDARD, fluid), 0),
+                    new MobEffectInstance(MobEffects.ABSORPTION,  dur(D_BRIEF,    fluid), 0));
+            // Сирень: запах весны пробуждает — видишь и чувствуешь голод меньше
+            case "ground_lilac"                     -> two(
+                    new MobEffectInstance(MobEffects.NIGHT_VISION, dur(D_STANDARD, fluid), 0),
+                    new MobEffectInstance(MobEffects.SATURATION,   dur(D_BRIEF,    fluid), 0));
+            // Шиповник: шипы бьют в обе стороны — сила и краткая защита
+            case "ground_rose_bush"                 -> two(
+                    new MobEffectInstance(MobEffects.DAMAGE_BOOST, dur(D_STANDARD, fluid), 0),
+                    new MobEffectInstance(MobEffects.ABSORPTION,   dur(D_BRIEF,    fluid), 0));
+            // Голубая незабудка: маленькая, но целебная
+            case "ground_azure_bluet"               -> two(
+                    new MobEffectInstance(MobEffects.REGENERATION, dur(D_STANDARD, fluid), 0),
+                    new MobEffectInstance(MobEffects.ABSORPTION,   dur(D_BRIEF,    fluid), 0));
+            // Тюльпаны: каждый цвет — своя история
+            case "ground_pink_tulip"                -> two(  // нежный — лечение и сытость
+                    new MobEffectInstance(MobEffects.REGENERATION, dur(D_STANDARD, fluid), 0),
+                    new MobEffectInstance(MobEffects.SATURATION,   dur(D_BRIEF,    fluid), 0));
+            case "ground_red_tulip"                 -> two(  // страсть — сила и вспышка регена
+                    new MobEffectInstance(MobEffects.DAMAGE_BOOST, dur(D_STANDARD, fluid), 0),
+                    new MobEffectInstance(MobEffects.REGENERATION, dur(D_BRIEF,    fluid), 0));
+            case "ground_orange_tulip"              -> two(  // тепло — скорость и жаростойкость
+                    new MobEffectInstance(MobEffects.MOVEMENT_SPEED, dur(D_STANDARD, fluid), 0),
+                    new MobEffectInstance(MobEffects.FIRE_RESISTANCE, dur(D_POWERFUL, fluid), 0));
+            case "ground_white_tulip"               -> two(  // чистота — стойкость и поглощение
+                    new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, dur(D_STANDARD, fluid), 0),
+                    new MobEffectInstance(MobEffects.ABSORPTION,        dur(D_BRIEF,    fluid), 0));
 
             // ── Dangerous ────────────────────────────────────────────────────
             case "dried_ground_spider_eye"          -> two(
@@ -154,18 +226,40 @@ public class HookahSmokingRecipes {
             case "dried_ground_slimeball"           -> two(
                     new MobEffectInstance(MobEffects.JUMP,              dur(D_STANDARD, fluid), a + 1),
                     new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, dur(D_POWERFUL, fluid), 0));
-            case "ground_prismarine_shard"          -> one(MobEffects.WATER_BREATHING,  dur(D_LONG,     fluid), 0);
-            case "ground_pumpkin"                   -> one(MobEffects.NIGHT_VISION,     dur(D_STANDARD, fluid), 0);
-            case "ground_weeping_vines"             -> two(
-                    new MobEffectInstance(MobEffects.WEAKNESS,          dur(D_POWERFUL, fluid), 0),
+            // Призмарин светится под водой — дышишь и видишь в глубине
+            case "ground_prismarine_shard"          -> two(
+                    new MobEffectInstance(MobEffects.WATER_BREATHING, dur(D_LONG,     fluid), 0),
+                    new MobEffectInstance(MobEffects.NIGHT_VISION,    dur(D_STANDARD, fluid), 0));
+            // Тыква: фонарь Джека — светишься сам как свечка
+            case "ground_pumpkin"                   -> two(
+                    new MobEffectInstance(MobEffects.NIGHT_VISION, dur(D_STANDARD, fluid), 0),
+                    new MobEffectInstance(MobEffects.GLOWING,      dur(D_STANDARD, fluid), 0));
+            // Плачущие лозы: медленно, но упрямо — как лоза, что растёт несмотря ни на что
+            case "ground_weeping_vines"             -> three(
+                    new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, dur(D_STANDARD, fluid), 0),
+                    new MobEffectInstance(MobEffects.REGENERATION,      dur(D_STANDARD, fluid), 0),
                     new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, dur(D_POWERFUL, fluid), 0));
-            case "ground_coal"                      -> one(MobEffects.FIRE_RESISTANCE,  dur(D_STANDARD, fluid), 0);
-            case "ground_carrot"                    -> one(MobEffects.NIGHT_VISION,     dur(D_POWERFUL, fluid), 0);
-            case "ground_beetroot"                  -> one(MobEffects.REGENERATION,     dur(D_BRIEF,    fluid), 0);
-            case "ground_potato"                    -> one(MobEffects.SATURATION,       dur(D_BRIEF,    fluid), 0);
+            // Уголь: углеродная броня — жаростойкость и твёрдость
+            case "ground_coal"                      -> two(
+                    new MobEffectInstance(MobEffects.FIRE_RESISTANCE,   dur(D_STANDARD, fluid), 0),
+                    new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, dur(D_POWERFUL, fluid), 0));
+            // Морковь: кроличье зрение и кроличьи ноги
+            case "ground_carrot"                    -> two(
+                    new MobEffectInstance(MobEffects.NIGHT_VISION, dur(D_STANDARD, fluid), 0),
+                    new MobEffectInstance(MobEffects.JUMP,         dur(D_POWERFUL, fluid), 0));
+            // Свёкла: кровяная сила — реген и вспышка мощи
+            case "ground_beetroot"                  -> two(
+                    new MobEffectInstance(MobEffects.REGENERATION, dur(D_STANDARD, fluid), 0),
+                    new MobEffectInstance(MobEffects.DAMAGE_BOOST, dur(D_BRIEF,    fluid), 0));
+            // Картофель: плотный, тяжёлый — сыт, медлителен, но стоек
+            case "ground_potato"                    -> three(
+                    new MobEffectInstance(MobEffects.SATURATION,        dur(D_LONG,     fluid), 0),
+                    new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, dur(D_STANDARD, fluid), 0),
+                    new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, dur(D_STANDARD, fluid), 0));
+            // Какао: кофеин и тепло шоколада
             case "ground_cocoa_beans"               -> two(
-                    new MobEffectInstance(MobEffects.DIG_SPEED,      dur(D_BRIEF, fluid), 0),
-                    new MobEffectInstance(MobEffects.MOVEMENT_SPEED, dur(D_BRIEF, fluid), 0));
+                    new MobEffectInstance(MobEffects.DIG_SPEED,      dur(D_STANDARD, fluid), 0),
+                    new MobEffectInstance(MobEffects.MOVEMENT_SPEED, dur(D_POWERFUL, fluid), 0));
 
             // ── Сырые перемолотые ────────────────────────────────────────────
             case "wet_ground_apple"                 -> one(MobEffects.REGENERATION,     dur(D_POWERFUL, fluid), 0);
@@ -177,19 +271,9 @@ public class HookahSmokingRecipes {
     // ── Синергии ─────────────────────────────────────────────────────────────
 
     private static List<MobEffectInstance> getSynergyEffects(List<String> ingredients, HookahFluidType fluid) {
-        List<MobEffectInstance> bonuses = new ArrayList<>();
-
-        // Табак + яблоко: классический бленд — бонусный Absorption
-        if (has(ingredients, "dried_ground_tobacco", "dried_ground_apple")) {
-            bonuses.add(new MobEffectInstance(MobEffects.ABSORPTION, dur(D_STANDARD, fluid), 0));
-        }
-
-        // Бурый + красный гриб: полная микология — Jump Boost III
-        if (has(ingredients, "dried_ground_brown_mushroom", "dried_ground_red_mushroom")) {
-            bonuses.add(new MobEffectInstance(MobEffects.JUMP, dur(D_STANDARD, fluid), 2));
-        }
-
-        return bonuses;
+        return getActiveSynergies(ingredients, fluid).stream()
+                .flatMap(s -> s.bonus().stream())
+                .collect(java.util.stream.Collectors.toList());
     }
 
     // ── Хелперы ──────────────────────────────────────────────────────────────
@@ -217,5 +301,9 @@ public class HookahSmokingRecipes {
 
     private static List<MobEffectInstance> two(MobEffectInstance a, MobEffectInstance b) {
         return List.of(a, b);
+    }
+
+    private static List<MobEffectInstance> three(MobEffectInstance a, MobEffectInstance b, MobEffectInstance c) {
+        return List.of(a, b, c);
     }
 }
