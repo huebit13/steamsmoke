@@ -101,6 +101,8 @@ public class SteamSmoke {
                                 output.accept(ModItems.DRIED_SPIDER_EYE.get());
                                 output.accept(ModItems.DRIED_FERMENTED_SPIDER_EYE.get());
                                 output.accept(ModItems.DRIED_BAMBOO.get());
+                                output.accept(ModItems.DRIED_PUFFERFISH.get());
+                                output.accept(ModItems.DRIED_LEAVES.get());
                                 // ── Сырые перемолотые (wet_ground) ───────────────────
                                 output.accept(ModItems.WET_GROUND_APPLE.get());
                                 output.accept(ModItems.WET_GROUND_BROWN_MUSHROOM.get());
@@ -143,6 +145,8 @@ public class SteamSmoke {
                                 output.accept(ModItems.DRIED_GROUND_SPIDER_EYE.get());
                                 output.accept(ModItems.DRIED_GROUND_FERMENTED_SPIDER_EYE.get());
                                 output.accept(ModItems.DRIED_GROUND_BAMBOO.get());
+                                output.accept(ModItems.DRIED_GROUND_PUFFERFISH.get());
+                                output.accept(ModItems.DRIED_GROUND_LEAVES.get());
                                 // ── Обычные перемолотые ───────────────────────────────
                                 output.accept(ModItems.GROUND_SUGAR.get());
                                 output.accept(ModItems.GROUND_SWEET_BERRIES.get());
@@ -174,6 +178,26 @@ public class SteamSmoke {
                                 output.accept(ModItems.GROUND_PRISMARINE_SHARD.get());
                                 output.accept(ModItems.GROUND_ENDER_PEARL.get());
                                 output.accept(ModItems.GROUND_PINK_PETALS.get());
+                                output.accept(ModItems.GROUND_GUNPOWDER.get());
+                                output.accept(ModItems.GROUND_REDSTONE.get());
+                                output.accept(ModItems.GROUND_MOSS.get());
+                                output.accept(ModItems.GROUND_DRAGON_EGG.get());
+                                output.accept(ModItems.GROUND_AMETHYST.get());
+                                output.accept(ModItems.GROUND_WEEPING_VINES.get());
+                                output.accept(ModItems.GROUND_PUMPKIN.get());
+                                output.accept(ModItems.GROUND_COAL.get());
+                                output.accept(ModItems.GROUND_FIRE_CHARGE.get());
+                                output.accept(ModItems.GROUND_BONE_MEAL.get());
+                                output.accept(ModItems.GROUND_WIND_CHARGE.get());
+                                output.accept(ModItems.GROUND_TOTEM_OF_UNDYING.get());
+                                output.accept(ModItems.GROUND_TNT.get());
+                                output.accept(ModItems.GROUND_END_CRYSTAL.get());
+                                output.accept(ModItems.GROUND_IRON_NUGGET.get());
+                                output.accept(ModItems.GROUND_GOLD_NUGGET.get());
+                                output.accept(ModItems.GROUND_NETHERITE.get());
+                                output.accept(ModItems.GROUND_NETHER_STAR.get());
+                                output.accept(ModItems.GROUND_ECHO_SHARD.get());
+                                output.accept(ModItems.GROUND_GOLDEN_CARROT.get());
                                 // ── Замес ─────────────────────────────────────────────
                                 output.accept(ModItems.MIXTURE.get());
                             })

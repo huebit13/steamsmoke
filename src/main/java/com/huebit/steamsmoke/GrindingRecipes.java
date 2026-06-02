@@ -62,6 +62,8 @@ public class GrindingRecipes {
         register(ModItems.DRIED_SPIDER_EYE.get(),           new ItemStack(ModItems.DRIED_GROUND_SPIDER_EYE.get()));
         register(ModItems.DRIED_FERMENTED_SPIDER_EYE.get(), new ItemStack(ModItems.DRIED_GROUND_FERMENTED_SPIDER_EYE.get()));
         register(ModItems.DRIED_BAMBOO.get(),               new ItemStack(ModItems.DRIED_GROUND_BAMBOO.get()));
+        register(ModItems.DRIED_PUFFERFISH.get(),          new ItemStack(ModItems.DRIED_GROUND_PUFFERFISH.get()));
+        register(ModItems.DRIED_LEAVES.get(),              new ItemStack(ModItems.DRIED_GROUND_LEAVES.get()));
 
         // ── Без сушки (только один вариант) ──────────────────────────────────
         register(Items.SUGAR,                   new ItemStack(ModItems.GROUND_SUGAR.get()));
@@ -94,6 +96,33 @@ public class GrindingRecipes {
         register(Items.PRISMARINE_SHARD,        new ItemStack(ModItems.GROUND_PRISMARINE_SHARD.get()));
         register(Items.ENDER_PEARL,             new ItemStack(ModItems.GROUND_ENDER_PEARL.get()));
         register(Items.PINK_PETALS,             new ItemStack(ModItems.GROUND_PINK_PETALS.get()));
+        register(Items.GUNPOWDER,               new ItemStack(ModItems.GROUND_GUNPOWDER.get()));
+        register(Items.REDSTONE,                new ItemStack(ModItems.GROUND_REDSTONE.get()));
+        register(Items.MOSS_BLOCK,              new ItemStack(ModItems.GROUND_MOSS.get()));
+        register(Items.DRAGON_EGG,              new ItemStack(ModItems.GROUND_DRAGON_EGG.get()));
+        // Аметист — несколько видов → одно перемолотое
+        register(Items.AMETHYST_SHARD,          new ItemStack(ModItems.GROUND_AMETHYST.get()));
+        register(Items.AMETHYST_CLUSTER,        new ItemStack(ModItems.GROUND_AMETHYST.get()));
+        register(Items.SMALL_AMETHYST_BUD,      new ItemStack(ModItems.GROUND_AMETHYST.get()));
+        register(Items.MEDIUM_AMETHYST_BUD,     new ItemStack(ModItems.GROUND_AMETHYST.get()));
+        register(Items.LARGE_AMETHYST_BUD,      new ItemStack(ModItems.GROUND_AMETHYST.get()));
+        register(Items.AMETHYST_BLOCK,          new ItemStack(ModItems.GROUND_AMETHYST.get()));
+        register(Items.WEEPING_VINES,           new ItemStack(ModItems.GROUND_WEEPING_VINES.get()));
+        register(Items.PUMPKIN,                 new ItemStack(ModItems.GROUND_PUMPKIN.get()));
+        register(Items.COAL,                    new ItemStack(ModItems.GROUND_COAL.get()));
+        register(Items.CHARCOAL,                new ItemStack(ModItems.GROUND_COAL.get()));
+        register(Items.FIRE_CHARGE,             new ItemStack(ModItems.GROUND_FIRE_CHARGE.get()));
+        register(Items.BONE_MEAL,               new ItemStack(ModItems.GROUND_BONE_MEAL.get()));
+        register(Items.WIND_CHARGE,             new ItemStack(ModItems.GROUND_WIND_CHARGE.get()));
+        register(Items.TOTEM_OF_UNDYING,        new ItemStack(ModItems.GROUND_TOTEM_OF_UNDYING.get()));
+        register(Items.TNT,                     new ItemStack(ModItems.GROUND_TNT.get()));
+        register(Items.END_CRYSTAL,             new ItemStack(ModItems.GROUND_END_CRYSTAL.get()));
+        register(Items.IRON_NUGGET,             new ItemStack(ModItems.GROUND_IRON_NUGGET.get()));
+        register(Items.GOLD_NUGGET,             new ItemStack(ModItems.GROUND_GOLD_NUGGET.get()));
+        register(Items.NETHERITE_INGOT,         new ItemStack(ModItems.GROUND_NETHERITE.get()));
+        register(Items.NETHER_STAR,             new ItemStack(ModItems.GROUND_NETHER_STAR.get()));
+        register(Items.ECHO_SHARD,              new ItemStack(ModItems.GROUND_ECHO_SHARD.get()));
+        register(Items.GOLDEN_CARROT,           new ItemStack(ModItems.GROUND_GOLDEN_CARROT.get()));
     }
 
     public static void register(Item input, ItemStack output) {

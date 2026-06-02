@@ -1,0 +1,7 @@
+﻿{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "steamsmoke:item/ground_weeping_vines"
+  }
+}
+

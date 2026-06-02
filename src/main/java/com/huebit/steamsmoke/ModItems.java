@@ -59,6 +59,10 @@ public class ModItems {
             "dried_fermented_spider_eye", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> DRIED_BAMBOO = ITEMS.registerSimpleItem(
             "dried_bamboo", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_PUFFERFISH = ITEMS.registerSimpleItem(
+            "dried_pufferfish", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_LEAVES = ITEMS.registerSimpleItem(
+            "dried_leaves", new Item.Properties().stacksTo(64));
 
     // ── Сырые перемолотые (без сушки; табак — только через сушку) ────────────
     public static final DeferredItem<Item> WET_GROUND_APPLE = ITEMS.registerSimpleItem(
@@ -143,6 +147,10 @@ public class ModItems {
             "dried_ground_fermented_spider_eye", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> DRIED_GROUND_BAMBOO = ITEMS.registerSimpleItem(
             "dried_ground_bamboo", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_PUFFERFISH = ITEMS.registerSimpleItem(
+            "dried_ground_pufferfish", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_LEAVES = ITEMS.registerSimpleItem(
+            "dried_ground_leaves", new Item.Properties().stacksTo(64));
 
     // ── Обычные перемолотые (предметы без сушки) ──────────────────────────────
     public static final DeferredItem<Item> GROUND_SUGAR = ITEMS.registerSimpleItem(
@@ -205,6 +213,46 @@ public class ModItems {
             "ground_ender_pearl", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> GROUND_PINK_PETALS = ITEMS.registerSimpleItem(
             "ground_pink_petals", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> GROUND_GUNPOWDER = ITEMS.registerSimpleItem(
+            "ground_gunpowder", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> GROUND_REDSTONE = ITEMS.registerSimpleItem(
+            "ground_redstone", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> GROUND_MOSS = ITEMS.registerSimpleItem(
+            "ground_moss", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> GROUND_DRAGON_EGG = ITEMS.registerSimpleItem(
+            "ground_dragon_egg", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> GROUND_AMETHYST = ITEMS.registerSimpleItem(
+            "ground_amethyst", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> GROUND_WEEPING_VINES = ITEMS.registerSimpleItem(
+            "ground_weeping_vines", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> GROUND_PUMPKIN = ITEMS.registerSimpleItem(
+            "ground_pumpkin", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> GROUND_COAL = ITEMS.registerSimpleItem(
+            "ground_coal", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> GROUND_FIRE_CHARGE = ITEMS.registerSimpleItem(
+            "ground_fire_charge", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> GROUND_BONE_MEAL = ITEMS.registerSimpleItem(
+            "ground_bone_meal", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> GROUND_WIND_CHARGE = ITEMS.registerSimpleItem(
+            "ground_wind_charge", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> GROUND_TOTEM_OF_UNDYING = ITEMS.registerSimpleItem(
+            "ground_totem_of_undying", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> GROUND_TNT = ITEMS.registerSimpleItem(
+            "ground_tnt", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> GROUND_END_CRYSTAL = ITEMS.registerSimpleItem(
+            "ground_end_crystal", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> GROUND_IRON_NUGGET = ITEMS.registerSimpleItem(
+            "ground_iron_nugget", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> GROUND_GOLD_NUGGET = ITEMS.registerSimpleItem(
+            "ground_gold_nugget", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> GROUND_NETHERITE = ITEMS.registerSimpleItem(
+            "ground_netherite", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> GROUND_NETHER_STAR = ITEMS.registerSimpleItem(
+            "ground_nether_star", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> GROUND_ECHO_SHARD = ITEMS.registerSimpleItem(
+            "ground_echo_shard", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> GROUND_GOLDEN_CARROT = ITEMS.registerSimpleItem(
+            "ground_golden_carrot", new Item.Properties().stacksTo(64));
 
     // ── Замес ────────────────────────────────────────────────────────────────
     public static final DeferredItem<MixtureItem> MIXTURE = ITEMS.register(

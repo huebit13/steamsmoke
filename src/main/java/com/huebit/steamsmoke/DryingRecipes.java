@@ -45,6 +45,18 @@ public class DryingRecipes {
         add(Items.SPIDER_EYE,                    ModItems.DRIED_SPIDER_EYE.get(),            19200); // 16 мин
         add(Items.FERMENTED_SPIDER_EYE,          ModItems.DRIED_FERMENTED_SPIDER_EYE.get(), 19200); // 16 мин
         add(Items.BAMBOO,                        ModItems.DRIED_BAMBOO.get(),                 9600); //  8 мин
+        add(Items.PUFFERFISH,                    ModItems.DRIED_PUFFERFISH.get(),            19200); // 16 мин
+        // ── Листва (любой тип) ───────────────────────────────────────────────
+        add(Items.OAK_LEAVES,                    ModItems.DRIED_LEAVES.get(),                 9600); //  8 мин
+        add(Items.BIRCH_LEAVES,                  ModItems.DRIED_LEAVES.get(),                 9600); //  8 мин
+        add(Items.SPRUCE_LEAVES,                 ModItems.DRIED_LEAVES.get(),                 9600); //  8 мин
+        add(Items.JUNGLE_LEAVES,                 ModItems.DRIED_LEAVES.get(),                 9600); //  8 мин
+        add(Items.ACACIA_LEAVES,                 ModItems.DRIED_LEAVES.get(),                 9600); //  8 мин
+        add(Items.DARK_OAK_LEAVES,               ModItems.DRIED_LEAVES.get(),                 9600); //  8 мин
+        add(Items.CHERRY_LEAVES,                 ModItems.DRIED_LEAVES.get(),                 9600); //  8 мин
+        add(Items.AZALEA_LEAVES,                 ModItems.DRIED_LEAVES.get(),                 9600); //  8 мин
+        add(Items.FLOWERING_AZALEA_LEAVES,       ModItems.DRIED_LEAVES.get(),                 9600); //  8 мин
+        add(Items.MANGROVE_LEAVES,               ModItems.DRIED_LEAVES.get(),                 9600); //  8 мин
     }
 
     private static void add(Item input, Item output, int durationTicks) {
