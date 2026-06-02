@@ -19,6 +19,16 @@ import java.util.List;
 @EventBusSubscriber(modid = SteamSmoke.MODID, value = Dist.CLIENT)
 public class SteamSmokeTooltips {
 
+    // Palette of signature colors for ingredient linking
+    private static final int[] PALETTE = {
+        0xFFA552, 0x52C5FF, 0xFF7EB3, 0x7BFF72,
+        0xBD79FF, 0xFFD95C, 0x52FFDB, 0xFF6B6B
+    };
+
+    static TextColor getIngredientColor(String ingredient) {
+        return TextColor.fromRgb(PALETTE[Math.abs(ingredient.hashCode()) % PALETTE.length]);
+    }
+
     @SubscribeEvent
     public static void onTooltip(ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
@@ -38,8 +48,7 @@ public class SteamSmokeTooltips {
                 tip.add(effectLine(eff));
             }
         } else {
-            tip.add(Component.literal("  ◆ ???")
-                    .withStyle(ChatFormatting.DARK_GRAY));
+            tip.add(unknownLine(null));
             tip.add(Component.literal("  Закурите в кальяне, чтобы узнать")
                     .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GRAY).withItalic(true)));
         }
@@ -47,7 +56,7 @@ public class SteamSmokeTooltips {
         tip.add(thinSep());
     }
 
-    // ── Shared helpers (used by MixtureItem too) ─────────────────────────────
+    // ── Shared helpers ───────────────────────────────────────────────────────
 
     static Component thinSep() {
         return Component.literal("──────────────────").withStyle(ChatFormatting.DARK_GRAY);
@@ -61,56 +70,59 @@ public class SteamSmokeTooltips {
         return Component.literal(text).withStyle(ChatFormatting.GOLD);
     }
 
+    // Standard effect line (individual ingredient tooltips)
     static Component effectLine(MobEffectInstance eff) {
         return effectLine(eff, false);
     }
 
     static Component effectLine(MobEffectInstance eff, boolean isSynergy) {
         TextColor color = TextColor.fromRgb(eff.getEffect().value().getColor());
-        String duration = formatDuration(eff.getDuration());
-
-        MutableComponent name = Component.translatable(eff.getEffect().value().getDescriptionId());
-        if (eff.getAmplifier() > 0) {
-            name = Component.translatable("potion.withAmplifier", name,
-                    Component.translatable("potion.potency." + eff.getAmplifier()));
-        }
-
         MutableComponent line = Component.literal("  ◆ ")
                 .withStyle(ChatFormatting.DARK_GRAY)
-                .append(name.withStyle(Style.EMPTY.withColor(color)))
-                .append(Component.literal("   · " + duration).withStyle(ChatFormatting.GRAY));
-
-        if (isSynergy) {
-            line.append(Component.literal("  ✦").withStyle(ChatFormatting.LIGHT_PURPLE));
-        }
-
+                .append(buildEffectName(eff).withStyle(Style.EMPTY.withColor(color)))
+                .append(durationBar(eff.getDuration()))
+                .append(Component.literal(formatDuration(eff.getDuration())).withStyle(ChatFormatting.GRAY));
+        if (isSynergy) line.append(Component.literal("  ✦").withStyle(ChatFormatting.LIGHT_PURPLE));
         return line;
     }
 
-    static Component effectLineNested(MobEffectInstance eff) {
-        return effectLineNested(eff, false);
+    // Mixture effect line: signature-colored bullet links to its ingredient
+    static Component effectLineColored(MobEffectInstance eff, boolean isSynergy, TextColor sigColor) {
+        TextColor potionColor = TextColor.fromRgb(eff.getEffect().value().getColor());
+        MutableComponent line = Component.literal("  ◆ ")
+                .withStyle(Style.EMPTY.withColor(sigColor))
+                .append(buildEffectName(eff).withStyle(Style.EMPTY.withColor(potionColor)))
+                .append(durationBar(eff.getDuration()))
+                .append(Component.literal(formatDuration(eff.getDuration())).withStyle(ChatFormatting.GRAY));
+        if (isSynergy) line.append(Component.literal("  ✦").withStyle(ChatFormatting.LIGHT_PURPLE));
+        return line;
     }
 
-    static Component effectLineNested(MobEffectInstance eff, boolean isSynergy) {
-        TextColor color = TextColor.fromRgb(eff.getEffect().value().getColor());
-        String duration = formatDuration(eff.getDuration());
+    // Unknown/undiscovered effect line
+    static Component unknownLine(TextColor sigColor) {
+        Style bulletStyle = sigColor != null
+                ? Style.EMPTY.withColor(sigColor)
+                : Style.EMPTY.withColor(ChatFormatting.DARK_GRAY);
+        return Component.literal("  ◆ ")
+                .withStyle(bulletStyle)
+                .append(Component.literal("???????   ·   ?:??")
+                        .withStyle(Style.EMPTY.withColor(TextColor.fromRgb(0x6B4C8F)).withItalic(true)));
+    }
 
+    // Duration bar: ▰▰▰▰▰▱▱▱ scaled to D_UTILITY (5 min max)
+    static Component durationBar(int ticks) {
+        int filled = Math.max(1, Math.min(8, Math.round(8f * ticks / 6000f)));
+        String bar = "▰".repeat(filled) + "▱".repeat(8 - filled);
+        return Component.literal("  " + bar + "  ").withStyle(ChatFormatting.DARK_GRAY);
+    }
+
+    private static MutableComponent buildEffectName(MobEffectInstance eff) {
         MutableComponent name = Component.translatable(eff.getEffect().value().getDescriptionId());
         if (eff.getAmplifier() > 0) {
             name = Component.translatable("potion.withAmplifier", name,
                     Component.translatable("potion.potency." + eff.getAmplifier()));
         }
-
-        MutableComponent line = Component.literal("    ◆ ")
-                .withStyle(ChatFormatting.DARK_GRAY)
-                .append(name.withStyle(Style.EMPTY.withColor(color)))
-                .append(Component.literal("   · " + duration).withStyle(ChatFormatting.GRAY));
-
-        if (isSynergy) {
-            line.append(Component.literal("  ✦").withStyle(ChatFormatting.LIGHT_PURPLE));
-        }
-
-        return line;
+        return name;
     }
 
     static String formatDuration(int ticks) {

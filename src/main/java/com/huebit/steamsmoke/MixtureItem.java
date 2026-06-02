@@ -9,6 +9,8 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -70,14 +72,15 @@ public class MixtureItem extends Item {
             return;
         }
 
-        // ── Шапка ────────────────────────────────────────────────────────────
         tip.add(SteamSmokeTooltips.thickSep());
 
-        // ── Состав (ингредиенты + их эффекты) ────────────────────────────────
+        // ── Состав: каждый ингредиент + его эффекты одним цветом ─────────────
         tip.add(SteamSmokeTooltips.header("◉ Состав"));
         for (String ing : ingredients) {
-            tip.add(Component.literal("  ◦ ")
-                    .withStyle(ChatFormatting.DARK_GRAY)
+            TextColor sig = SteamSmokeTooltips.getIngredientColor(ing);
+
+            tip.add(Component.literal("◆ ")
+                    .withStyle(Style.EMPTY.withColor(sig))
                     .append(Component.translatable("item.steamsmoke." + ing)
                             .withStyle(ChatFormatting.YELLOW)));
 
@@ -85,11 +88,10 @@ public class MixtureItem extends Item {
             if (!ingEffects.isEmpty()) {
                 if (SmokingDiscoveries.isDiscovered(ing)) {
                     for (MobEffectInstance eff : ingEffects) {
-                        tip.add(SteamSmokeTooltips.effectLineNested(eff));
+                        tip.add(SteamSmokeTooltips.effectLineColored(eff, false, sig));
                     }
                 } else {
-                    tip.add(Component.literal("    ◆ ???")
-                            .withStyle(ChatFormatting.DARK_GRAY));
+                    tip.add(SteamSmokeTooltips.unknownLine(sig));
                 }
             }
         }
@@ -99,22 +101,28 @@ public class MixtureItem extends Item {
                 HookahSmokingRecipes.getActiveSynergies(ingredients, HookahFluidType.WATER);
         if (!synergies.isEmpty()) {
             tip.add(Component.empty());
+            TextColor synColor = TextColor.fromRgb(0xBD79FF);
             for (HookahSmokingRecipes.SynergyInfo syn : synergies) {
                 tip.add(Component.literal("✦ ")
                         .withStyle(ChatFormatting.LIGHT_PURPLE)
                         .append(Component.literal(syn.name())
                                 .withStyle(ChatFormatting.DARK_PURPLE)));
-
                 boolean allKnown = syn.required().stream().allMatch(SmokingDiscoveries::isDiscovered);
                 if (allKnown) {
                     for (MobEffectInstance eff : syn.bonus()) {
-                        tip.add(SteamSmokeTooltips.effectLineNested(eff, true));
+                        tip.add(SteamSmokeTooltips.effectLineColored(eff, true, synColor));
                     }
                 } else {
-                    tip.add(Component.literal("    ◆ ???")
-                            .withStyle(ChatFormatting.DARK_GRAY));
+                    tip.add(SteamSmokeTooltips.unknownLine(synColor));
                 }
             }
+        }
+
+        // ── Аура ──────────────────────────────────────────────────────────────
+        Component aura = buildAura(ingredients);
+        if (aura != null) {
+            tip.add(Component.empty());
+            tip.add(aura);
         }
 
         // ── Использования ─────────────────────────────────────────────────────
@@ -130,11 +138,41 @@ public class MixtureItem extends Item {
                 .withStyle(ChatFormatting.DARK_GRAY));
         tip.add(usesLine);
 
-        // ── Подсказка про жидкость ────────────────────────────────────────────
         tip.add(Component.literal("  Жидкость изменяет силу и длительность")
                 .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GRAY).withItalic(true)));
 
-        // ── Подвал ────────────────────────────────────────────────────────────
         tip.add(SteamSmokeTooltips.thickSep());
+    }
+
+    private static Component buildAura(List<String> ingredients) {
+        int beneficial = 0, harmful = 0;
+        for (String ing : ingredients) {
+            for (MobEffectInstance eff : HookahSmokingRecipes.getBaseEffects(ing)) {
+                MobEffectCategory cat = eff.getEffect().value().getCategory();
+                if (cat == MobEffectCategory.BENEFICIAL) beneficial++;
+                else if (cat == MobEffectCategory.HARMFUL) harmful++;
+            }
+        }
+        int total = beneficial + harmful;
+        if (total == 0) return null;
+
+        String label;
+        int rgb;
+        if (harmful == 0) {
+            label = "Исцеляющая";  rgb = 0x52FF8C;
+        } else if (beneficial == 0) {
+            label = "Зловещая";    rgb = 0xFF4444;
+        } else if (beneficial > harmful * 2) {
+            label = "Боевая";      rgb = 0xFFD95C;
+        } else if (harmful >= beneficial) {
+            label = "Зловещая";    rgb = 0xFF4444;
+        } else {
+            label = "Хаотичная";   rgb = 0xBD79FF;
+        }
+
+        return Component.literal("  ✦ Аура: ")
+                .withStyle(ChatFormatting.DARK_GRAY)
+                .append(Component.literal(label)
+                        .withStyle(Style.EMPTY.withColor(TextColor.fromRgb(rgb))));
     }
 }
