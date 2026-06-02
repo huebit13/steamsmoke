@@ -9,7 +9,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -74,45 +73,30 @@ public class MixtureItem extends Item {
         // ── Шапка ────────────────────────────────────────────────────────────
         tip.add(SteamSmokeTooltips.thickSep());
 
-        // ── Ингредиенты ───────────────────────────────────────────────────────
-        tip.add(SteamSmokeTooltips.header("◉ Ингредиенты"));
+        // ── Состав (ингредиенты + их эффекты) ────────────────────────────────
+        tip.add(SteamSmokeTooltips.header("◉ Состав"));
         for (String ing : ingredients) {
             tip.add(Component.literal("  ◦ ")
                     .withStyle(ChatFormatting.DARK_GRAY)
                     .append(Component.translatable("item.steamsmoke." + ing)
                             .withStyle(ChatFormatting.YELLOW)));
-        }
 
-        // ── Эффекты ───────────────────────────────────────────────────────────
-        tip.add(Component.empty());
-        tip.add(SteamSmokeTooltips.header("◈ Эффекты"));
-
-        List<HookahSmokingRecipes.SynergyInfo> synergies =
-                HookahSmokingRecipes.getActiveSynergies(ingredients, HookahFluidType.WATER);
-
-        // Собираем ключи эффектов синергий, чтобы пометить их ✦
-        java.util.Set<String> synergyEffectIds = new java.util.HashSet<>();
-        for (HookahSmokingRecipes.SynergyInfo syn : synergies) {
-            for (MobEffectInstance eff : syn.bonus()) {
-                synergyEffectIds.add(eff.getEffect().value().getDescriptionId());
-            }
-        }
-
-        // Обычные эффекты от каждого ингредиента
-        for (String ing : ingredients) {
-            for (MobEffectInstance eff : HookahSmokingRecipes.getBaseEffects(ing)) {
-                tip.add(SteamSmokeTooltips.effectLine(eff, false));
-            }
-        }
-
-        // Бонусные эффекты синергий (отмечены ✦)
-        for (HookahSmokingRecipes.SynergyInfo syn : synergies) {
-            for (MobEffectInstance eff : syn.bonus()) {
-                tip.add(SteamSmokeTooltips.effectLine(eff, true));
+            List<MobEffectInstance> ingEffects = HookahSmokingRecipes.getBaseEffects(ing);
+            if (!ingEffects.isEmpty()) {
+                if (SmokingDiscoveries.isDiscovered(ing)) {
+                    for (MobEffectInstance eff : ingEffects) {
+                        tip.add(SteamSmokeTooltips.effectLineNested(eff));
+                    }
+                } else {
+                    tip.add(Component.literal("    ◆ ???")
+                            .withStyle(ChatFormatting.DARK_GRAY));
+                }
             }
         }
 
         // ── Синергии ──────────────────────────────────────────────────────────
+        List<HookahSmokingRecipes.SynergyInfo> synergies =
+                HookahSmokingRecipes.getActiveSynergies(ingredients, HookahFluidType.WATER);
         if (!synergies.isEmpty()) {
             tip.add(Component.empty());
             for (HookahSmokingRecipes.SynergyInfo syn : synergies) {
@@ -120,6 +104,16 @@ public class MixtureItem extends Item {
                         .withStyle(ChatFormatting.LIGHT_PURPLE)
                         .append(Component.literal(syn.name())
                                 .withStyle(ChatFormatting.DARK_PURPLE)));
+
+                boolean allKnown = syn.required().stream().allMatch(SmokingDiscoveries::isDiscovered);
+                if (allKnown) {
+                    for (MobEffectInstance eff : syn.bonus()) {
+                        tip.add(SteamSmokeTooltips.effectLineNested(eff, true));
+                    }
+                } else {
+                    tip.add(Component.literal("    ◆ ???")
+                            .withStyle(ChatFormatting.DARK_GRAY));
+                }
             }
         }
 

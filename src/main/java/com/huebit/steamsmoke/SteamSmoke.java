@@ -2,6 +2,7 @@ package com.huebit.steamsmoke;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -12,17 +13,18 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.slf4j.Logger;
-import com.mojang.logging.LogUtils;
 
+@SuppressWarnings("unused")
 @Mod(SteamSmoke.MODID)
 public class SteamSmoke {
     public static final String MODID = "steamsmoke";
-    public static final Logger LOGGER = LogUtils.getLogger();
 
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
@@ -211,8 +213,23 @@ public class SteamSmoke {
         ModBlockEntities.register(modEventBus);
         ModItems.register(modEventBus);
 
+        modEventBus.addListener(SteamSmoke::registerPayloads);
+        NeoForge.EVENT_BUS.addListener(SteamSmoke::onEntityJoinLevel);
+
         if (FMLEnvironment.dist == Dist.CLIENT) {
             modEventBus.register(new SteamSmokeClient());
+        }
+    }
+
+    private static void registerPayloads(RegisterPayloadHandlersEvent event) {
+        event.registrar("1.0")
+             .playToClient(SyncDiscoveriesPacket.TYPE, SyncDiscoveriesPacket.CODEC,
+                     SyncDiscoveriesPacket::handleClient);
+    }
+
+    private static void onEntityJoinLevel(EntityJoinLevelEvent event) {
+        if (!event.getLevel().isClientSide() && event.getEntity() instanceof ServerPlayer sp) {
+            SmokingDiscoveries.syncToClient(sp);
         }
     }
 }

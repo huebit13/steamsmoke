@@ -87,6 +87,32 @@ public class SteamSmokeTooltips {
         return line;
     }
 
+    static Component effectLineNested(MobEffectInstance eff) {
+        return effectLineNested(eff, false);
+    }
+
+    static Component effectLineNested(MobEffectInstance eff, boolean isSynergy) {
+        TextColor color = TextColor.fromRgb(eff.getEffect().value().getColor());
+        String duration = formatDuration(eff.getDuration());
+
+        MutableComponent name = Component.translatable(eff.getEffect().value().getDescriptionId());
+        if (eff.getAmplifier() > 0) {
+            name = Component.translatable("potion.withAmplifier", name,
+                    Component.translatable("potion.potency." + eff.getAmplifier()));
+        }
+
+        MutableComponent line = Component.literal("    ◆ ")
+                .withStyle(ChatFormatting.DARK_GRAY)
+                .append(name.withStyle(Style.EMPTY.withColor(color)))
+                .append(Component.literal("   · " + duration).withStyle(ChatFormatting.GRAY));
+
+        if (isSynergy) {
+            line.append(Component.literal("  ✦").withStyle(ChatFormatting.LIGHT_PURPLE));
+        }
+
+        return line;
+    }
+
     static String formatDuration(int ticks) {
         int sec = ticks / 20;
         return (sec / 60) + ":" + String.format("%02d", sec % 60);
