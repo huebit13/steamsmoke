@@ -30,7 +30,7 @@ public class GrindingRecipes {
         register(Items.CHORUS_FRUIT,             new ItemStack(ModItems.WET_GROUND_CHORUS_FRUIT.get()));
         register(Items.GLOW_BERRIES,             new ItemStack(ModItems.WET_GROUND_GLOW_BERRIES.get()));
         register(Items.PHANTOM_MEMBRANE,         new ItemStack(ModItems.WET_GROUND_PHANTOM_MEMBRANE.get()));
-        register(Items.RABBIT_FOOT,              new ItemStack(ModItems.WET_GROUND_RABBIT_FOOT.get()));
+        register(Items.INK_SAC,                  new ItemStack(ModItems.WET_GROUND_INK_SAC.get()));
         register(Items.SLIME_BALL,               new ItemStack(ModItems.WET_GROUND_SLIMEBALL.get()));
         register(Items.SEA_PICKLE,               new ItemStack(ModItems.WET_GROUND_SEA_PICKLE.get()));
         register(Items.MAGMA_CREAM,              new ItemStack(ModItems.WET_GROUND_MAGMA_CREAM.get()));
@@ -54,7 +54,8 @@ public class GrindingRecipes {
         register(ModItems.DRIED_CHORUS_FRUIT.get(),         new ItemStack(ModItems.DRIED_GROUND_CHORUS_FRUIT.get()));
         register(ModItems.DRIED_GLOW_BERRIES.get(),         new ItemStack(ModItems.DRIED_GROUND_GLOW_BERRIES.get()));
         register(ModItems.DRIED_PHANTOM_MEMBRANE.get(),     new ItemStack(ModItems.DRIED_GROUND_PHANTOM_MEMBRANE.get()));
-        register(ModItems.DRIED_RABBIT_FOOT.get(),          new ItemStack(ModItems.DRIED_GROUND_RABBIT_FOOT.get()));
+        register(ModItems.DRIED_RABBIT_HIDE.get(),          new ItemStack(ModItems.DRIED_GROUND_RABBIT_HIDE.get()));
+        register(ModItems.DRIED_INK_SAC.get(),              new ItemStack(ModItems.DRIED_GROUND_INK_SAC.get()));
         register(ModItems.DRIED_SLIMEBALL.get(),            new ItemStack(ModItems.DRIED_GROUND_SLIMEBALL.get()));
         register(ModItems.DRIED_SEA_PICKLE.get(),           new ItemStack(ModItems.DRIED_GROUND_SEA_PICKLE.get()));
         register(ModItems.DRIED_MAGMA_CREAM.get(),          new ItemStack(ModItems.DRIED_GROUND_MAGMA_CREAM.get()));
@@ -87,13 +88,11 @@ public class GrindingRecipes {
         register(Items.ROSE_BUSH,               new ItemStack(ModItems.GROUND_ROSE_BUSH.get()));
         register(Items.CARROT,                  new ItemStack(ModItems.GROUND_CARROT.get()));
         register(Items.BEETROOT,                new ItemStack(ModItems.GROUND_BEETROOT.get()));
-        register(Items.POTATO,                  new ItemStack(ModItems.GROUND_POTATO.get()));
+        register(Items.BAKED_POTATO,             new ItemStack(ModItems.GROUND_POTATO.get()));
         register(Items.COCOA_BEANS,             new ItemStack(ModItems.GROUND_COCOA_BEANS.get()));
         register(Items.SPORE_BLOSSOM,           new ItemStack(ModItems.GROUND_SPORE_BLOSSOM.get()));
-        register(Items.INK_SAC,                 new ItemStack(ModItems.GROUND_INK_SAC.get()));
         register(Items.PRISMARINE_SHARD,        new ItemStack(ModItems.GROUND_PRISMARINE_SHARD.get()));
         register(Items.ENDER_PEARL,             new ItemStack(ModItems.GROUND_ENDER_PEARL.get()));
-        register(Items.DRAGON_BREATH,           new ItemStack(ModItems.GROUND_DRAGON_BREATH.get()));
         register(Items.PINK_PETALS,             new ItemStack(ModItems.GROUND_PINK_PETALS.get()));
     }
 

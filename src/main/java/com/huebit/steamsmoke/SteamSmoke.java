@@ -93,7 +93,8 @@ public class SteamSmoke {
                                 output.accept(ModItems.DRIED_CHORUS_FRUIT.get());
                                 output.accept(ModItems.DRIED_GLOW_BERRIES.get());
                                 output.accept(ModItems.DRIED_PHANTOM_MEMBRANE.get());
-                                output.accept(ModItems.DRIED_RABBIT_FOOT.get());
+                                output.accept(ModItems.DRIED_RABBIT_HIDE.get());
+                                output.accept(ModItems.DRIED_INK_SAC.get());
                                 output.accept(ModItems.DRIED_SLIMEBALL.get());
                                 output.accept(ModItems.DRIED_SEA_PICKLE.get());
                                 output.accept(ModItems.DRIED_MAGMA_CREAM.get());
@@ -113,7 +114,7 @@ public class SteamSmoke {
                                 output.accept(ModItems.WET_GROUND_CHORUS_FRUIT.get());
                                 output.accept(ModItems.WET_GROUND_GLOW_BERRIES.get());
                                 output.accept(ModItems.WET_GROUND_PHANTOM_MEMBRANE.get());
-                                output.accept(ModItems.WET_GROUND_RABBIT_FOOT.get());
+                                output.accept(ModItems.WET_GROUND_INK_SAC.get());
                                 output.accept(ModItems.WET_GROUND_SLIMEBALL.get());
                                 output.accept(ModItems.WET_GROUND_SEA_PICKLE.get());
                                 output.accept(ModItems.WET_GROUND_MAGMA_CREAM.get());
@@ -134,7 +135,8 @@ public class SteamSmoke {
                                 output.accept(ModItems.DRIED_GROUND_CHORUS_FRUIT.get());
                                 output.accept(ModItems.DRIED_GROUND_GLOW_BERRIES.get());
                                 output.accept(ModItems.DRIED_GROUND_PHANTOM_MEMBRANE.get());
-                                output.accept(ModItems.DRIED_GROUND_RABBIT_FOOT.get());
+                                output.accept(ModItems.DRIED_GROUND_RABBIT_HIDE.get());
+                                output.accept(ModItems.DRIED_GROUND_INK_SAC.get());
                                 output.accept(ModItems.DRIED_GROUND_SLIMEBALL.get());
                                 output.accept(ModItems.DRIED_GROUND_SEA_PICKLE.get());
                                 output.accept(ModItems.DRIED_GROUND_MAGMA_CREAM.get());
@@ -169,10 +171,8 @@ public class SteamSmoke {
                                 output.accept(ModItems.GROUND_POTATO.get());
                                 output.accept(ModItems.GROUND_COCOA_BEANS.get());
                                 output.accept(ModItems.GROUND_SPORE_BLOSSOM.get());
-                                output.accept(ModItems.GROUND_INK_SAC.get());
                                 output.accept(ModItems.GROUND_PRISMARINE_SHARD.get());
                                 output.accept(ModItems.GROUND_ENDER_PEARL.get());
-                                output.accept(ModItems.GROUND_DRAGON_BREATH.get());
                                 output.accept(ModItems.GROUND_PINK_PETALS.get());
                                 // ── Замес ─────────────────────────────────────────────
                                 output.accept(ModItems.MIXTURE.get());

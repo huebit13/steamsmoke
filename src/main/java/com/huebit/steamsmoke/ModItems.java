@@ -43,8 +43,10 @@ public class ModItems {
             "dried_glow_berries", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> DRIED_PHANTOM_MEMBRANE = ITEMS.registerSimpleItem(
             "dried_phantom_membrane", new Item.Properties().stacksTo(64));
-    public static final DeferredItem<Item> DRIED_RABBIT_FOOT = ITEMS.registerSimpleItem(
-            "dried_rabbit_foot", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_RABBIT_HIDE = ITEMS.registerSimpleItem(
+            "dried_rabbit_hide", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_INK_SAC = ITEMS.registerSimpleItem(
+            "dried_ink_sac", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> DRIED_SLIMEBALL = ITEMS.registerSimpleItem(
             "dried_slimeball", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> DRIED_SEA_PICKLE = ITEMS.registerSimpleItem(
@@ -83,8 +85,8 @@ public class ModItems {
             "wet_ground_glow_berries", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> WET_GROUND_PHANTOM_MEMBRANE = ITEMS.registerSimpleItem(
             "wet_ground_phantom_membrane", new Item.Properties().stacksTo(64));
-    public static final DeferredItem<Item> WET_GROUND_RABBIT_FOOT = ITEMS.registerSimpleItem(
-            "wet_ground_rabbit_foot", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> WET_GROUND_INK_SAC = ITEMS.registerSimpleItem(
+            "wet_ground_ink_sac", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> WET_GROUND_SLIMEBALL = ITEMS.registerSimpleItem(
             "wet_ground_slimeball", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> WET_GROUND_SEA_PICKLE = ITEMS.registerSimpleItem(
@@ -125,8 +127,10 @@ public class ModItems {
             "dried_ground_glow_berries", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> DRIED_GROUND_PHANTOM_MEMBRANE = ITEMS.registerSimpleItem(
             "dried_ground_phantom_membrane", new Item.Properties().stacksTo(64));
-    public static final DeferredItem<Item> DRIED_GROUND_RABBIT_FOOT = ITEMS.registerSimpleItem(
-            "dried_ground_rabbit_foot", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_RABBIT_HIDE = ITEMS.registerSimpleItem(
+            "dried_ground_rabbit_hide", new Item.Properties().stacksTo(64));
+    public static final DeferredItem<Item> DRIED_GROUND_INK_SAC = ITEMS.registerSimpleItem(
+            "dried_ground_ink_sac", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> DRIED_GROUND_SLIMEBALL = ITEMS.registerSimpleItem(
             "dried_ground_slimeball", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> DRIED_GROUND_SEA_PICKLE = ITEMS.registerSimpleItem(
@@ -195,14 +199,10 @@ public class ModItems {
             "ground_cocoa_beans", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> GROUND_SPORE_BLOSSOM = ITEMS.registerSimpleItem(
             "ground_spore_blossom", new Item.Properties().stacksTo(64));
-    public static final DeferredItem<Item> GROUND_INK_SAC = ITEMS.registerSimpleItem(
-            "ground_ink_sac", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> GROUND_PRISMARINE_SHARD = ITEMS.registerSimpleItem(
             "ground_prismarine_shard", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> GROUND_ENDER_PEARL = ITEMS.registerSimpleItem(
             "ground_ender_pearl", new Item.Properties().stacksTo(64));
-    public static final DeferredItem<Item> GROUND_DRAGON_BREATH = ITEMS.registerSimpleItem(
-            "ground_dragon_breath", new Item.Properties().stacksTo(64));
     public static final DeferredItem<Item> GROUND_PINK_PETALS = ITEMS.registerSimpleItem(
             "ground_pink_petals", new Item.Properties().stacksTo(64));
 

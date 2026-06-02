@@ -37,7 +37,8 @@ public class DryingRecipes {
         // ── Поздняя игра ─────────────────────────────────────────────────────
         add(Items.PHANTOM_MEMBRANE,              ModItems.DRIED_PHANTOM_MEMBRANE.get(),      28800); // 24 мин
         // ── Надземный мир / разное ────────────────────────────────────────────
-        add(Items.RABBIT_FOOT,                   ModItems.DRIED_RABBIT_FOOT.get(),           21600); // 18 мин
+        add(Items.RABBIT_HIDE,                   ModItems.DRIED_RABBIT_HIDE.get(),           21600); // 18 мин
+        add(Items.INK_SAC,                       ModItems.DRIED_INK_SAC.get(),               14400); // 12 мин
         add(Items.SLIME_BALL,                    ModItems.DRIED_SLIMEBALL.get(),             26400); // 22 мин
         add(Items.SEA_PICKLE,                    ModItems.DRIED_SEA_PICKLE.get(),            12000); // 10 мин
         add(Items.MAGMA_CREAM,                   ModItems.DRIED_MAGMA_CREAM.get(),           26400); // 22 мин
