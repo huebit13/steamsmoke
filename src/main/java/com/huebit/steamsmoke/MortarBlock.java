@@ -113,11 +113,18 @@ public class MortarBlock extends Block implements EntityBlock {
                     return ItemInteractionResult.sidedSuccess(false);
                 }
 
-                mortar.replaceWith(ground);
+                boolean itemConsumed = GrindEvents.tryFire(single.getItem(), level, pos, player);
+
+                if (itemConsumed) {
+                    mortar.removeAll();
+                } else {
+                    mortar.replaceWith(ground);
+                    player.displayClientMessage(Component.translatable("block.steamsmoke.mortar.ground"), true);
+                }
+
                 damagePestle(pestle, player, hand);
                 level.playSound(null, pos, SoundEvents.GRINDSTONE_USE, SoundSource.BLOCKS, 1.0f, 1.2f);
                 spawnGrindParticles(level, pos);
-                player.displayClientMessage(Component.translatable("block.steamsmoke.mortar.ground"), true);
 
             } else {
                 boolean allGround = contents.stream().allMatch(GrindingRecipes::isGround);
