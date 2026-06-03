@@ -200,6 +200,8 @@ public class SteamSmoke {
                                 output.accept(ModItems.GROUND_NETHER_STAR.get());
                                 output.accept(ModItems.GROUND_ECHO_SHARD.get());
                                 output.accept(ModItems.GROUND_GOLDEN_CARROT.get());
+                                // ── Портативный диффузор ──────────────────────────────
+                                output.accept(ModItems.PORTABLE_DIFFUSER.get());
                                 // ── Замес ─────────────────────────────────────────────
                                 output.accept(ModItems.MIXTURE.get());
                             })
@@ -212,6 +214,7 @@ public class SteamSmoke {
         CREATIVE_TABS.register(modEventBus);
         ModBlockEntities.register(modEventBus);
         ModItems.register(modEventBus);
+        ModMenuTypes.register(modEventBus);
 
         modEventBus.addListener(SteamSmoke::registerPayloads);
         NeoForge.EVENT_BUS.addListener(SteamSmoke::onEntityJoinLevel);

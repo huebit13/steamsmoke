@@ -1,0 +1,8 @@
+{
+  "parent": "steamsmoke:block/portable_diffuser_base",
+  "overrides": [
+    { "predicate": { "steamsmoke:fluid_variant": 0.5 }, "model": "steamsmoke:block/portable_diffuser_fluid_gold" },
+    { "predicate": { "steamsmoke:fluid_variant": 1.5 }, "model": "steamsmoke:block/portable_diffuser_fluid_mint" },
+    { "predicate": { "steamsmoke:fluid_variant": 2.5 }, "model": "steamsmoke:block/portable_diffuser_fluid_purple" }
+  ]
+}

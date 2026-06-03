@@ -258,6 +258,10 @@ public class ModItems {
     public static final DeferredItem<MixtureItem> MIXTURE = ITEMS.register(
             "mixture", () -> new MixtureItem(new Item.Properties().stacksTo(1).durability(3)));
 
+    // ── Портативный диффузор ──────────────────────────────────────────────────
+    public static final DeferredItem<PortableDiffuserItem> PORTABLE_DIFFUSER = ITEMS.register(
+            "portable_diffuser", () -> new PortableDiffuserItem(new Item.Properties().stacksTo(1)));
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

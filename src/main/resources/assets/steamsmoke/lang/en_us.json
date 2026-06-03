@@ -145,5 +145,9 @@
 
   "item.steamsmoke.mixture.empty": "Empty mixture",
   "item.steamsmoke.mixture.contents": "Contains:",
-  "block.steamsmoke.mortar.no_mixture": "Cannot put mixture back into mortar"
+  "block.steamsmoke.mortar.no_mixture": "Cannot put mixture back into mortar",
+
+  "item.steamsmoke.portable_diffuser": "Portable Diffuser",
+  "item.steamsmoke.portable_diffuser.no_mixture": "No mixture loaded",
+  "item.steamsmoke.portable_diffuser.slot_label": "Mixture"
 }

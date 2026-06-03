@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 
 public class SteamSmokeClient {
 
@@ -19,9 +20,21 @@ public class SteamSmokeClient {
                     ModItems.MIXTURE.get(),
                     ResourceLocation.fromNamespaceAndPath(SteamSmoke.MODID, "flecks_variant"),
                     (stack, level, entity, seed) ->
-                            MixtureItem.getFlecksVariant(stack) // 0 = нет слоя, 1..16 = вариант
+                            MixtureItem.getFlecksVariant(stack)
+            );
+
+            ItemProperties.register(
+                    ModItems.PORTABLE_DIFFUSER.get(),
+                    ResourceLocation.fromNamespaceAndPath(SteamSmoke.MODID, "fluid_variant"),
+                    (stack, level, entity, seed) ->
+                            (float) PortableDiffuserItem.getFluidVariant(stack)
             );
         });
+    }
+
+    @SubscribeEvent
+    public void registerScreens(RegisterMenuScreensEvent event) {
+        event.register(ModMenuTypes.PORTABLE_DIFFUSER.get(), PortableDiffuserScreen::new);
     }
 
     @SubscribeEvent
