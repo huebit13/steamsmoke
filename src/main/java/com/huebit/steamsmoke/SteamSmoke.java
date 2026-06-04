@@ -7,6 +7,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.api.distmarker.Dist;
@@ -66,6 +67,15 @@ public class SteamSmoke {
             )
     );
     public static final DeferredItem<BlockItem> WALL_DRYING_RACK_ITEM = ITEMS.registerSimpleBlockItem("wall_drying_rack", WALL_DRYING_RACK);
+
+    public static final DeferredBlock<Block> BLEND_CHEST_BLOCK = BLOCKS.register("blend_chest",
+            () -> new BlendChestBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.WOOD)
+                    .strength(2.0f)
+                    .noOcclusion()
+                    .sound(SoundType.WOOD)
+            )
+    );
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> STEAM_SMOKE_TAB =
             CREATIVE_TABS.register("steam_smoke_tab", () ->
@@ -204,6 +214,7 @@ public class SteamSmoke {
                                 output.accept(ModItems.PORTABLE_DIFFUSER.get());
                                 // ── Мешочек ───────────────────────────────────────────
                                 output.accept(ModItems.BLEND_POUCH.get());
+                                output.accept(ModItems.BLEND_CHEST_ITEM.get());
                                 // ── Замес ─────────────────────────────────────────────
                                 output.accept(ModItems.MIXTURE.get());
                             })
@@ -231,7 +242,9 @@ public class SteamSmoke {
              .playToClient(SyncDiscoveriesPacket.TYPE, SyncDiscoveriesPacket.CODEC,
                      SyncDiscoveriesPacket::handleClient)
              .playToServer(CollectToPouchPacket.TYPE, CollectToPouchPacket.CODEC,
-                     CollectToPouchPacket::handleServer);
+                     CollectToPouchPacket::handleServer)
+             .playToServer(CollectToChestPacket.TYPE, CollectToChestPacket.CODEC,
+                     CollectToChestPacket::handleServer);
     }
 
     private static void onEntityJoinLevel(EntityJoinLevelEvent event) {

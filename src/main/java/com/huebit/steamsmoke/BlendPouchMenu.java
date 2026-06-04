@@ -13,8 +13,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class BlendPouchMenu extends AbstractContainerMenu {
 
-    private static final int TOTAL_SLOTS = BlendPouchItem.TOTAL_SLOTS;
-    private static final int MIXTURE_SLOTS = BlendPouchItem.MIXTURE_SLOTS;
+    private static final int TOTAL_SLOTS     = BlendPouchItem.TOTAL_SLOTS;      // 27
+    private static final int MIXTURE_SLOTS   = BlendPouchItem.MIXTURE_SLOTS;    // 9
+    private static final int INGREDIENT_SLOTS = BlendPouchItem.INGREDIENT_SLOTS; // 18
 
     final SimpleContainer container;
     private final Player player;
@@ -37,37 +38,35 @@ public class BlendPouchMenu extends AbstractContainerMenu {
             for (int i = 0; i < TOTAL_SLOTS; i++) container.setItem(i, items.get(i));
         }
 
-        // Mixture slots (0-17): 2 rows × 9
+        // Mixture slots (0-8): 1 row × 9, y=24
         for (int i = 0; i < MIXTURE_SLOTS; i++) {
-            int row = i / 9, col = i % 9;
-            addSlot(new Slot(container, i, 8 + col * 18, 24 + row * 18) {
-                @Override
-                public boolean mayPlace(@NotNull ItemStack stack) {
+            int col = i % 9;
+            addSlot(new Slot(container, i, 8 + col * 18, 24) {
+                @Override public boolean mayPlace(@NotNull ItemStack stack) {
                     return stack.is(ModItems.MIXTURE.get());
                 }
             });
         }
 
-        // Ingredient slots (18-53): 4 rows × 9
-        for (int i = 0; i < BlendPouchItem.INGREDIENT_SLOTS; i++) {
+        // Ingredient slots (9-26): 2 rows × 9, y = 54 + row*18
+        for (int i = 0; i < INGREDIENT_SLOTS; i++) {
             int row = i / 9, col = i % 9;
-            addSlot(new Slot(container, MIXTURE_SLOTS + i, 8 + col * 18, 72 + row * 18) {
-                @Override
-                public boolean mayPlace(@NotNull ItemStack stack) {
+            addSlot(new Slot(container, MIXTURE_SLOTS + i, 8 + col * 18, 54 + row * 18) {
+                @Override public boolean mayPlace(@NotNull ItemStack stack) {
                     return BlendPouchItem.isIngredient(stack);
                 }
             });
         }
 
-        // Player inventory (slots 54-80)
+        // Player inventory (slots 27-53), y = 122 + row*18
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++) {
-                addSlot(new Slot(playerInv, col + row * 9 + 9, 8 + col * 18, 176 + row * 18));
+                addSlot(new Slot(playerInv, col + row * 9 + 9, 8 + col * 18, 122 + row * 18));
             }
         }
-        // Hotbar (slots 81-89)
+        // Hotbar (slots 54-62), y=180
         for (int col = 0; col < 9; col++) {
-            addSlot(new Slot(playerInv, col, 8 + col * 18, 234));
+            addSlot(new Slot(playerInv, col, 8 + col * 18, 180));
         }
 
         container.addListener(c -> {
@@ -99,7 +98,6 @@ public class BlendPouchMenu extends AbstractContainerMenu {
     }
 
     private void tryMoveToSection(ItemStack stack, int start, int end) {
-        // Pass 1: merge with existing stacks
         for (int i = start; i < end && !stack.isEmpty(); i++) {
             ItemStack existing = container.getItem(i);
             if (!existing.isEmpty() && ItemStack.isSameItemSameComponents(existing, stack)) {
@@ -112,7 +110,6 @@ public class BlendPouchMenu extends AbstractContainerMenu {
                 }
             }
         }
-        // Pass 2: fill empty slots
         for (int i = start; i < end && !stack.isEmpty(); i++) {
             if (container.getItem(i).isEmpty()) {
                 container.setItem(i, stack.copy());
@@ -152,11 +149,9 @@ public class BlendPouchMenu extends AbstractContainerMenu {
         ItemStack result = slotStack.copy();
 
         if (index < TOTAL_SLOTS) {
-            // Pouch → player inventory
             if (!moveItemStackTo(slotStack, TOTAL_SLOTS, TOTAL_SLOTS + 36, true))
                 return ItemStack.EMPTY;
         } else {
-            // Player inventory → pouch
             if (slotStack.is(ModItems.MIXTURE.get())) {
                 if (!moveItemStackTo(slotStack, 0, MIXTURE_SLOTS, false))
                     return ItemStack.EMPTY;

@@ -154,5 +154,10 @@
   "item.steamsmoke.blend_pouch": "Blend Pouch",
   "item.steamsmoke.blend_pouch.mixtures": "Mixtures",
   "item.steamsmoke.blend_pouch.ingredients": "Ingredients",
-  "item.steamsmoke.blend_pouch.collect": "Collect All"
+  "item.steamsmoke.blend_pouch.collect": "Collect All",
+
+  "item.steamsmoke.blend_chest": "Blend Chest",
+  "block.steamsmoke.blend_chest": "Blend Chest",
+  "item.steamsmoke.blend_chest.mixtures": "Mixtures",
+  "item.steamsmoke.blend_chest.ingredients": "Ingredients"
 }

@@ -18,9 +18,9 @@ import net.minecraft.world.level.Level;
 
 public class BlendPouchItem extends Item {
 
-    public static final int MIXTURE_SLOTS    = 18;
-    public static final int INGREDIENT_SLOTS = 36;
-    public static final int TOTAL_SLOTS      = 54;
+    public static final int MIXTURE_SLOTS    = 9;
+    public static final int INGREDIENT_SLOTS = 18;
+    public static final int TOTAL_SLOTS      = 27;
 
     public BlendPouchItem(Properties properties) {
         super(properties);

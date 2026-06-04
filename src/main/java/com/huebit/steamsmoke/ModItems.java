@@ -266,6 +266,9 @@ public class ModItems {
     public static final DeferredItem<BlendPouchItem> BLEND_POUCH = ITEMS.register(
             "blend_pouch", () -> new BlendPouchItem(new Item.Properties().stacksTo(1)));
 
+    public static final DeferredItem<BlendChestItem> BLEND_CHEST_ITEM = ITEMS.register(
+            "blend_chest", () -> new BlendChestItem(new Item.Properties().stacksTo(1)));
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

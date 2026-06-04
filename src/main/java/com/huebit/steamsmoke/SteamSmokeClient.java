@@ -2,6 +2,8 @@ package com.huebit.steamsmoke;
 
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -36,6 +38,7 @@ public class SteamSmokeClient {
     public void registerScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenuTypes.PORTABLE_DIFFUSER.get(), PortableDiffuserScreen::new);
         event.register(ModMenuTypes.BLEND_POUCH.get(), BlendPouchScreen::new);
+        event.register(ModMenuTypes.BLEND_CHEST.get(), BlendChestScreen::new);
     }
 
     @SubscribeEvent
@@ -44,5 +47,15 @@ public class SteamSmokeClient {
         event.registerBlockEntityRenderer(ModBlockEntities.MORTAR_BE.get(), MortarBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.DRYING_RACK_BE.get(), DryingRackBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.WALL_DRYING_RACK_BE.get(), WallDryingRackBlockEntityRenderer::new);
+    }
+
+    @SubscribeEvent
+    public void addPlayerLayers(EntityRenderersEvent.AddLayers event) {
+        for (PlayerSkin.Model skin : event.getSkins()) {
+            PlayerRenderer renderer = event.getSkin(skin);
+            if (renderer != null) {
+                renderer.addLayer(new BlendChestLayer(renderer));
+            }
+        }
     }
 }

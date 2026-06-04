@@ -10,7 +10,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
-public class BlendPouchScreen extends AbstractContainerScreen<BlendPouchMenu> {
+public class BlendChestScreen extends AbstractContainerScreen<BlendChestMenu> {
 
     private static final int BG        = 0xFF2D2B27;
     private static final int PANEL     = 0xFF3A3832;
@@ -23,23 +23,16 @@ public class BlendPouchScreen extends AbstractContainerScreen<BlendPouchMenu> {
     private static final int BTN_NORM  = 0xFF4A4640;
     private static final int BTN_HOVER = 0xFF5A5650;
 
-    // Mixture panel:   y+14  to y+42  (1 row at y+23)
-    // Sep:             y+42  / y+43
-    // Ingredient panel:y+44  to y+91  (2 rows at y+53, y+71)
-    // Band:            y+91  to y+109
-    // Sep:             y+109 / y+110
-    // Inventory panel: y+111 to end
-
     private static final int BTN_X = 58;
-    private static final int BTN_Y = 96;  // band top y+91 + 5px
+    private static final int BTN_Y = 150;
     private static final int BTN_W = 60;
     private static final int BTN_H = 12;
 
-    public BlendPouchScreen(BlendPouchMenu menu, Inventory playerInventory, Component title) {
+    public BlendChestScreen(BlendChestMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         this.imageWidth  = 176;
-        this.imageHeight = 198;
-        this.inventoryLabelY = 112;
+        this.imageHeight = 252;
+        this.inventoryLabelY = 166;
     }
 
     @Override
@@ -49,18 +42,18 @@ public class BlendPouchScreen extends AbstractContainerScreen<BlendPouchMenu> {
 
         g.fill(x, y, x + imageWidth, y + imageHeight, BG);
 
-        // Mixture panel (1 row)
-        g.fill(x + 7, y + 14, x + 169, y + 42, PANEL);
+        // Mixture panel (2 rows)
+        g.fill(x + 7, y + 14, x + 169, y + 60, PANEL);
 
         // Separator 1
-        g.fill(x + 7, y + 42, x + 169, y + 43, SEP_DARK);
-        g.fill(x + 7, y + 43, x + 169, y + 44, SEP_LIGHT);
+        g.fill(x + 7, y + 60, x + 169, y + 61, SEP_DARK);
+        g.fill(x + 7, y + 61, x + 169, y + 62, SEP_LIGHT);
 
-        // Ingredient panel (2 rows)
-        g.fill(x + 7, y + 44, x + 169, y + 91, PANEL);
+        // Ingredient panel (4 rows)
+        g.fill(x + 7, y + 62, x + 169, y + 145, PANEL);
 
         // Button band
-        g.fill(x + 7, y + 91, x + 169, y + 109, BAND);
+        g.fill(x + 7, y + 145, x + 169, y + 163, BAND);
 
         // Collect button
         boolean hovered = mouseX >= x + BTN_X && mouseX < x + BTN_X + BTN_W
@@ -69,11 +62,11 @@ public class BlendPouchScreen extends AbstractContainerScreen<BlendPouchMenu> {
         g.fill(x + BTN_X + 1, y + BTN_Y + 1, x + BTN_X + BTN_W - 1, y + BTN_Y + BTN_H - 1, hovered ? BTN_HOVER : BTN_NORM);
 
         // Separator 2
-        g.fill(x + 7, y + 109, x + 169, y + 110, SEP_DARK);
-        g.fill(x + 7, y + 110, x + 169, y + 111, SEP_LIGHT);
+        g.fill(x + 7, y + 163, x + 169, y + 164, SEP_DARK);
+        g.fill(x + 7, y + 164, x + 169, y + 165, SEP_LIGHT);
 
         // Inventory panel
-        g.fill(x + 7, y + 111, x + 169, y + imageHeight, PANEL);
+        g.fill(x + 7, y + 165, x + 169, y + imageHeight, PANEL);
 
         // Outer border
         g.fill(x,                  y,                   x + 1,          y + imageHeight, BORDER);
@@ -81,28 +74,30 @@ public class BlendPouchScreen extends AbstractContainerScreen<BlendPouchMenu> {
         g.fill(x,                  y,                   x + imageWidth, y + 1,           BORDER);
         g.fill(x,                  y + imageHeight - 1, x + imageWidth, y + imageHeight, BORDER);
 
-        // Mixture slot backgrounds (1 row × 9)
-        for (int col = 0; col < 9; col++) {
-            drawSlotBg(g, x + 7 + col * 18, y + 23);
-        }
-
-        // Ingredient slot backgrounds (2 rows × 9)
+        // Mixture slot backgrounds (2 rows × 9)
         for (int row = 0; row < 2; row++) {
             for (int col = 0; col < 9; col++) {
-                drawSlotBg(g, x + 7 + col * 18, y + 53 + row * 18);
+                drawSlotBg(g, x + 7 + col * 18, y + 23 + row * 18);
+            }
+        }
+
+        // Ingredient slot backgrounds (4 rows × 9)
+        for (int row = 0; row < 4; row++) {
+            for (int col = 0; col < 9; col++) {
+                drawSlotBg(g, x + 7 + col * 18, y + 71 + row * 18);
             }
         }
 
         // Player inventory slot backgrounds (3 rows × 9)
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++) {
-                drawSlotBg(g, x + 7 + col * 18, y + 121 + row * 18);
+                drawSlotBg(g, x + 7 + col * 18, y + 175 + row * 18);
             }
         }
 
         // Hotbar
         for (int col = 0; col < 9; col++) {
-            drawSlotBg(g, x + 7 + col * 18, y + 179);
+            drawSlotBg(g, x + 7 + col * 18, y + 233);
         }
     }
 
@@ -116,17 +111,17 @@ public class BlendPouchScreen extends AbstractContainerScreen<BlendPouchMenu> {
         int cx = imageWidth / 2;
         g.drawCenteredString(font, title, cx, 4, 0xFFE0D0A0);
         g.drawCenteredString(font,
-                Component.translatable("item.steamsmoke.blend_pouch.mixtures"),
+                Component.translatable("item.steamsmoke.blend_chest.mixtures"),
                 cx, 15, 0xFFA09070);
         g.drawCenteredString(font,
-                Component.translatable("item.steamsmoke.blend_pouch.ingredients"),
-                cx, 45, 0xFFA09070);
+                Component.translatable("item.steamsmoke.blend_chest.ingredients"),
+                cx, 63, 0xFFA09070);
         g.drawCenteredString(font,
                 Component.translatable("item.steamsmoke.blend_pouch.collect"),
-                cx, BTN_Y + 3, 0xFFD0C090);
+                cx, 153, 0xFFD0C090);
         g.drawString(font,
                 Component.translatable("container.inventory"),
-                8, inventoryLabelY, 0xFF908070, false);
+                8, 166, 0xFF908070, false);
     }
 
     @Override
@@ -134,7 +129,7 @@ public class BlendPouchScreen extends AbstractContainerScreen<BlendPouchMenu> {
         if (button == 0) {
             int bx = leftPos + BTN_X, by = topPos + BTN_Y;
             if (mouseX >= bx && mouseX < bx + BTN_W && mouseY >= by && mouseY < by + BTN_H) {
-                PacketDistributor.sendToServer(new CollectToPouchPacket());
+                PacketDistributor.sendToServer(new CollectToChestPacket());
                 return true;
             }
         }
