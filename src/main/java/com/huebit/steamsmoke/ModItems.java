@@ -262,6 +262,10 @@ public class ModItems {
     public static final DeferredItem<PortableDiffuserItem> PORTABLE_DIFFUSER = ITEMS.register(
             "portable_diffuser", () -> new PortableDiffuserItem(new Item.Properties().stacksTo(1)));
 
+    // ── Мешочек для смесей ────────────────────────────────────────────────────
+    public static final DeferredItem<BlendPouchItem> BLEND_POUCH = ITEMS.register(
+            "blend_pouch", () -> new BlendPouchItem(new Item.Properties().stacksTo(1)));
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

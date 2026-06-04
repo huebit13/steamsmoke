@@ -202,6 +202,8 @@ public class SteamSmoke {
                                 output.accept(ModItems.GROUND_GOLDEN_CARROT.get());
                                 // ── Портативный диффузор ──────────────────────────────
                                 output.accept(ModItems.PORTABLE_DIFFUSER.get());
+                                // ── Мешочек ───────────────────────────────────────────
+                                output.accept(ModItems.BLEND_POUCH.get());
                                 // ── Замес ─────────────────────────────────────────────
                                 output.accept(ModItems.MIXTURE.get());
                             })
@@ -227,7 +229,9 @@ public class SteamSmoke {
     private static void registerPayloads(RegisterPayloadHandlersEvent event) {
         event.registrar("1.0")
              .playToClient(SyncDiscoveriesPacket.TYPE, SyncDiscoveriesPacket.CODEC,
-                     SyncDiscoveriesPacket::handleClient);
+                     SyncDiscoveriesPacket::handleClient)
+             .playToServer(CollectToPouchPacket.TYPE, CollectToPouchPacket.CODEC,
+                     CollectToPouchPacket::handleServer);
     }
 
     private static void onEntityJoinLevel(EntityJoinLevelEvent event) {

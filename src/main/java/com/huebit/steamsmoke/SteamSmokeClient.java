@@ -35,6 +35,7 @@ public class SteamSmokeClient {
     @SubscribeEvent
     public void registerScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenuTypes.PORTABLE_DIFFUSER.get(), PortableDiffuserScreen::new);
+        event.register(ModMenuTypes.BLEND_POUCH.get(), BlendPouchScreen::new);
     }
 
     @SubscribeEvent

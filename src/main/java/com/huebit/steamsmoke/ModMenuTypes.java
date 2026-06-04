@@ -15,6 +15,10 @@ public class ModMenuTypes {
             MENU_TYPES.register("portable_diffuser",
                     () -> IMenuTypeExtension.create(PortableDiffuserMenu::new));
 
+    public static final DeferredHolder<MenuType<?>, MenuType<BlendPouchMenu>> BLEND_POUCH =
+            MENU_TYPES.register("blend_pouch",
+                    () -> IMenuTypeExtension.create(BlendPouchMenu::new));
+
     public static void register(IEventBus eventBus) {
         MENU_TYPES.register(eventBus);
     }

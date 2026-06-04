@@ -149,5 +149,10 @@
 
   "item.steamsmoke.portable_diffuser": "Portable Diffuser",
   "item.steamsmoke.portable_diffuser.no_mixture": "No mixture loaded",
-  "item.steamsmoke.portable_diffuser.slot_label": "Mixture"
+  "item.steamsmoke.portable_diffuser.slot_label": "Mixture",
+
+  "item.steamsmoke.blend_pouch": "Blend Pouch",
+  "item.steamsmoke.blend_pouch.mixtures": "Mixtures",
+  "item.steamsmoke.blend_pouch.ingredients": "Ingredients",
+  "item.steamsmoke.blend_pouch.collect": "Collect All"
 }
