@@ -64,29 +64,38 @@ public class SteamSmokeClient {
         }
     }
 
+    private static final String[] GUI_ICON_ITEMS = {
+            "blend_chest", "portable_diffuser", "pestle",
+            "wall_drying_rack", "drying_rack", "mortar", "hookah"
+    };
+
     @SubscribeEvent
     public void registerAdditionalModels(ModelEvent.RegisterAdditional event) {
-        event.register(new ModelResourceLocation(
-                ResourceLocation.fromNamespaceAndPath(SteamSmoke.MODID, "item/blend_chest_icon"), "standalone"));
+        for (String item : GUI_ICON_ITEMS) {
+            event.register(new ModelResourceLocation(
+                    ResourceLocation.fromNamespaceAndPath(SteamSmoke.MODID, "item/" + item + "_icon"), "standalone"));
+        }
     }
 
     @SubscribeEvent
     public void modifyBakingResult(ModelEvent.ModifyBakingResult event) {
         Map<ModelResourceLocation, BakedModel> models = event.getModels();
+        for (String item : GUI_ICON_ITEMS) {
+            ModelResourceLocation itemKey = new ModelResourceLocation(
+                    ResourceLocation.fromNamespaceAndPath(SteamSmoke.MODID, item), "inventory");
+            BakedModel itemModel = models.get(itemKey);
 
-        ModelResourceLocation chestKey = new ModelResourceLocation(
-                ResourceLocation.fromNamespaceAndPath(SteamSmoke.MODID, "blend_chest"), "inventory");
-        BakedModel chestModel = models.get(chestKey);
+            String iconPath = "item/" + item + "_icon";
+            BakedModel iconModel = models.entrySet().stream()
+                    .filter(e -> e.getKey().id().getNamespace().equals(SteamSmoke.MODID)
+                              && e.getKey().id().getPath().equals(iconPath))
+                    .map(Map.Entry::getValue)
+                    .findFirst()
+                    .orElse(null);
 
-        BakedModel iconModel = models.entrySet().stream()
-                .filter(e -> e.getKey().id().getNamespace().equals(SteamSmoke.MODID)
-                          && e.getKey().id().getPath().equals("item/blend_chest_icon"))
-                .map(Map.Entry::getValue)
-                .findFirst()
-                .orElse(null);
-
-        if (chestModel != null && iconModel != null) {
-            models.put(chestKey, new BlendChestGuiModel(chestModel, iconModel));
+            if (itemModel != null && iconModel != null) {
+                models.put(itemKey, new BlendChestGuiModel(itemModel, iconModel));
+            }
         }
     }
 }
