@@ -10,7 +10,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -84,11 +83,14 @@ public class MixtureItem extends Item {
                     .append(Component.translatable("item.steamsmoke." + ing)
                             .withStyle(ChatFormatting.YELLOW)));
 
-            List<MobEffectInstance> ingEffects = HookahSmokingRecipes.getBaseEffects(ing);
+            HookahSmokingRecipes.IngredientEffects ingEffects = HookahSmokingRecipes.getBaseEffects(ing);
             if (!ingEffects.isEmpty()) {
                 if (SmokingDiscoveries.isDiscovered(ing)) {
-                    for (MobEffectInstance eff : ingEffects) {
+                    for (MobEffectInstance eff : ingEffects.positive()) {
                         tip.add(SteamSmokeTooltips.effectLineColored(eff, false, sig));
+                    }
+                    for (MobEffectInstance eff : ingEffects.negative()) {
+                        tip.add(SteamSmokeTooltips.negativeEffectLineColored(eff, false, sig));
                     }
                 } else {
                     tip.add(SteamSmokeTooltips.unknownLine(sig));
@@ -147,11 +149,9 @@ public class MixtureItem extends Item {
     private static Component buildAura(List<String> ingredients) {
         int beneficial = 0, harmful = 0;
         for (String ing : ingredients) {
-            for (MobEffectInstance eff : HookahSmokingRecipes.getBaseEffects(ing)) {
-                MobEffectCategory cat = eff.getEffect().value().getCategory();
-                if (cat == MobEffectCategory.BENEFICIAL) beneficial++;
-                else if (cat == MobEffectCategory.HARMFUL) harmful++;
-            }
+            HookahSmokingRecipes.IngredientEffects ie = HookahSmokingRecipes.getBaseEffects(ing);
+            beneficial += ie.positive().size();
+            harmful    += ie.negative().size();
         }
         int total = beneficial + harmful;
         if (total == 0) return null;

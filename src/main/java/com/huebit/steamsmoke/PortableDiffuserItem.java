@@ -195,12 +195,11 @@ public class PortableDiffuserItem extends Item {
         if (mixture.isEmpty()) return;
 
         List<String> ingredients = MixtureItem.getIngredients(mixture);
-        List<MobEffectInstance> effects = HookahSmokingRecipes.getEffects(ingredients, HookahFluidType.WATER);
+        HookahSmokingRecipes.IngredientEffects effects =
+                HookahSmokingRecipes.getEffects(ingredients, HookahFluidType.WATER);
 
         SmokingDiscoveries.recordSmoke(player, ingredients);
-        for (MobEffectInstance effect : effects) {
-            player.addEffect(effect);
-        }
+        effects.all().forEach(player::addEffect);
 
         // Затяжка
         level.playSound(null, player.blockPosition(),

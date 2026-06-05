@@ -1,6 +1,12 @@
 {
   "itemGroup.steamsmoke": "Steam & Smoke",
 
+  "effect.steamsmoke.spine_aura": "Spine Aura",
+  "effect.steamsmoke.fire_trail": "Fire Trail",
+  "effect.steamsmoke.soul_sight": "Soul Sight",
+  "effect.steamsmoke.gold_pact": "Gold Pact",
+  "effect.steamsmoke.iron_skin": "Iron Skin",
+
   "block.steamsmoke.hookah": "Hookah",
   "block.steamsmoke.mortar": "Mortar",
   "block.steamsmoke.drying_rack": "Drying Rack",

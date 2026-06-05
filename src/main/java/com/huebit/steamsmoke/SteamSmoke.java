@@ -228,6 +228,7 @@ public class SteamSmoke {
         ModBlockEntities.register(modEventBus);
         ModItems.register(modEventBus);
         ModMenuTypes.register(modEventBus);
+        ModMobEffects.register(modEventBus);
 
         modEventBus.addListener(SteamSmoke::registerPayloads);
         NeoForge.EVENT_BUS.addListener(SteamSmoke::onEntityJoinLevel);

@@ -8,7 +8,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -140,13 +139,12 @@ public class HookahBlock extends Block implements EntityBlock {
 
     private void smoke(HookahBlockEntity hookah, Level level, BlockPos pos, Player player) {
         List<String> ingredients = MixtureItem.getIngredients(hookah.getMixtureStack());
-        List<MobEffectInstance> effects = HookahSmokingRecipes.getEffects(ingredients, hookah.getFluidType());
+        HookahSmokingRecipes.IngredientEffects effects =
+                HookahSmokingRecipes.getEffects(ingredients, hookah.getFluidType());
 
         SmokingDiscoveries.recordSmoke(player, ingredients);
 
-        for (MobEffectInstance effect : effects) {
-            player.addEffect(effect);
-        }
+        effects.all().forEach(player::addEffect);
 
         if (hookah.getFluidType() == HookahFluidType.LAVA) {
             player.setRemainingFireTicks(40);

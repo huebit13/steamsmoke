@@ -36,7 +36,7 @@ public class SteamSmokeTooltips {
         if (!SteamSmoke.MODID.equals(key.getNamespace())) return;
 
         String id = key.getPath();
-        List<MobEffectInstance> base = HookahSmokingRecipes.getBaseEffects(id);
+        HookahSmokingRecipes.IngredientEffects base = HookahSmokingRecipes.getBaseEffects(id);
         if (base.isEmpty()) return;
 
         List<Component> tip = event.getToolTip();
@@ -44,8 +44,11 @@ public class SteamSmokeTooltips {
         tip.add(header("◈ Эффект при курении"));
 
         if (SmokingDiscoveries.isDiscovered(id)) {
-            for (MobEffectInstance eff : base) {
+            for (MobEffectInstance eff : base.positive()) {
                 tip.add(effectLine(eff));
+            }
+            for (MobEffectInstance eff : base.negative()) {
+                tip.add(negativeEffectLine(eff));
             }
         } else {
             tip.add(unknownLine(null));
@@ -91,6 +94,27 @@ public class SteamSmokeTooltips {
         TextColor potionColor = TextColor.fromRgb(eff.getEffect().value().getColor());
         MutableComponent line = Component.literal("  ◆ ")
                 .withStyle(Style.EMPTY.withColor(sigColor))
+                .append(buildEffectName(eff).withStyle(Style.EMPTY.withColor(potionColor)))
+                .append(durationBar(eff.getDuration()))
+                .append(Component.literal(formatDuration(eff.getDuration())).withStyle(ChatFormatting.GRAY));
+        if (isSynergy) line.append(Component.literal("  ✦").withStyle(ChatFormatting.LIGHT_PURPLE));
+        return line;
+    }
+
+    // Negative effect line (red bullet)
+    static Component negativeEffectLine(MobEffectInstance eff) {
+        TextColor color = TextColor.fromRgb(eff.getEffect().value().getColor());
+        return Component.literal("  ◆ ")
+                .withStyle(ChatFormatting.DARK_RED)
+                .append(buildEffectName(eff).withStyle(Style.EMPTY.withColor(color)))
+                .append(durationBar(eff.getDuration()))
+                .append(Component.literal(formatDuration(eff.getDuration())).withStyle(ChatFormatting.GRAY));
+    }
+
+    static Component negativeEffectLineColored(MobEffectInstance eff, boolean isSynergy, TextColor sigColor) {
+        TextColor potionColor = TextColor.fromRgb(eff.getEffect().value().getColor());
+        MutableComponent line = Component.literal("  ◆ ")
+                .withStyle(ChatFormatting.DARK_RED)
                 .append(buildEffectName(eff).withStyle(Style.EMPTY.withColor(potionColor)))
                 .append(durationBar(eff.getDuration()))
                 .append(Component.literal(formatDuration(eff.getDuration())).withStyle(ChatFormatting.GRAY));
